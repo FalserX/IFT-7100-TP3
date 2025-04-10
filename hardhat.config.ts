@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+const {API_URL, WALLET_KEY} = process.env
 require('dotenv').config()
 
 const config: HardhatUserConfig = {
@@ -10,19 +11,25 @@ const config: HardhatUserConfig = {
     // for mainnet
     'base-mainnet': {
       url: 'https://mainnet.base.org',
-      accounts: [process.env.WALLET_KEY as string],
+      accounts: [WALLET_KEY as string],
       gasPrice: 1000000000
     },
     // for testnet
     'base-sepolia': {
       url: 'https://sepolia.base.org',
-      accounts: [process.env.WALLET_KEY as string],
+      accounts: [WALLET_KEY as string],
+      gasPrice: 1000000000
+    },
+    // From Sepolia
+    'sepolia':{
+      url: API_URL,
+      accounts: [WALLET_KEY as string],
       gasPrice: 1000000000
     },
     // for local dev environment
     'base-local': {
       url: "http://localhost:8545",
-      accounts: [process.env.WALLET_KEY as string],
+      accounts: [WALLET_KEY as string],
       gasPrice: 1000000000
     },
   },

@@ -26,5 +26,26 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.3.0"
-  }
+  },
+  "name": "ift-7100-tp3-eq02",
+  "version": "1.0.0",
+  "description": "Projet scolaire démontrant l'efficacité des DApps utilisant Sepolia en Test Network",
+  "main": "index.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "nodemon index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FalserX/IFT-7100-TP3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FalserX/IFT-7100-TP3/issues"
+  },
+  "homepage": "https://github.com/FalserX/IFT-7100-TP3#readme"
 }
