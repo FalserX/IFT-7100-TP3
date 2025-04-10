@@ -1,14 +1,21 @@
-# Sample Hardhat Project
+# Projet WEB3_DApp avec Ethereum et React NextJS
+Ce projet permet de démontrer l'usage des applications décentralisées avec Ethereum et cela avec des contrats et Hardhat, dans le cadre du cours IFT-7100 Aspects pratiques de la chaine de blocs de l'Université Laval
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+Voici certaines commandes possibles
 
-Try running some of the following tasks:
+### Commandes possibles
 
-```shell
+__Hardhat native__
 npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
-npm run deploy --> donne l'usage du deploy sur le réseau test Sepolia définit en environnement
-```
+
+__Scripts NPM/YARN__
+npm run deploy / yarn deploy --> Effectue le déploiement sur le noeud du réseau test Sepolia (Définit dans les variables d'environnements .env)
+npm run dev / yarn dev --> Effectue le lancement du front en mode développement
+npm run build / yarn build --> Effectue la compilation du code du front
+npm run start-front / yarn start-front --> Effectue le lancement en mode production du front
+npm run lint / yarn lint --> Effectue le linter dans le code préparé
+npm run test / yarn test --> Effectue le lancement des tests à l'intérieur du code. (Principalement pour hardhat)
+npm run start-back / yarn start-back --> Effectue le lancement en mode production du back
