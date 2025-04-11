@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0" version="26.2.10">
   <diagram name="Page-1" id="MHkjtAtAsUvf8QlKYU1Z">
-    <mxGraphModel dx="1967" dy="3150" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="656" dy="2517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -227,13 +227,13 @@
         <mxCell id="_xC5X8Ry-eb2ACrK2DtC-84" value="" style="whiteSpace=wrap;html=1;aspect=fixed;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
           <mxGeometry x="30" y="225" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="_xC5X8Ry-eb2ACrK2DtC-85" value="Éléments3" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
-          <mxGeometry x="100" y="170" width="60" height="30" as="geometry" />
+        <mxCell id="_xC5X8Ry-eb2ACrK2DtC-85" value="Liste d&#39;envies" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
+          <mxGeometry x="90" y="170" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_xC5X8Ry-eb2ACrK2DtC-86" value="Commandes" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
           <mxGeometry x="100" y="70" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="_xC5X8Ry-eb2ACrK2DtC-87" value="Favoris" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
+        <mxCell id="_xC5X8Ry-eb2ACrK2DtC-87" value="Panier" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
           <mxGeometry x="100" y="120" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_xC5X8Ry-eb2ACrK2DtC-88" value="Se déconnecter" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;" parent="pGIuullt9VwNI_nBu1sU-4" vertex="1">
