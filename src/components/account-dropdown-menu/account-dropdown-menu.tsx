@@ -57,11 +57,11 @@ const AccountDropdownMenu = ({
           setDropdownOpen(false);
         }}
       />
-      {
+      {dropdownOpen && (
         <div className="absolute right-0 top-24 justify-center text-center border-2 mr-2 text-white shadow-lg min-w-96 min-h-12 rounded-xl border-black shadow-black bg-gray-700 z-50">
           {children ? children : <div></div>}
         </div>
-      }
+      )}
     </>
   );
 };
