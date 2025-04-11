@@ -5,6 +5,7 @@ import { connect, isConnected, disconnect } from "../../services/wallet";
 import { WalletResponse } from "@/types/wallet-response";
 import { ErrorCodes } from "@/utils/errors";
 import Image from "next/image";
+import AccountDropdownMenu from "../account-dropdown-menu/account-dropdown-menu";
 
 type InfoAccountProps = {
   walletResponse: WalletResponse | undefined;
@@ -21,32 +22,21 @@ const PageAccountSpace = () => {
     WalletResponse | undefined
   >();
   return (
-    <div className="flex flex-row">
-      <Image
-        src="\User.svg"
-        alt="Compte Usager"
-        width={32}
-        height={32}
-        className="pr-5"
-      />
-      {!isConnected() ? (
-        <ConnectButton setWalletResponse={setWalletResponse} />
-      ) : (
-        <>
-          <InfoAccount walletResponse={walletResponse} />
-          <DisconnectButton setWalletResponse={setWalletResponse} />
-        </>
-      )}
-    </div>
-  );
-};
-const InfoAccount = ({ walletResponse }: InfoAccountProps) => {
-  return (
     <>
-      <div>Portefeuille: {walletResponse?.address} connecté</div>
+      <div className="flex flex-row">
+        <Image
+          src="\User.svg"
+          alt="Compte Usager"
+          width={32}
+          height={32}
+          className="pr-5"
+        />
+        Votre compte
+      </div>
     </>
   );
 };
+
 const DisconnectButton = ({ setWalletResponse }: DisconnectButtonProps) => {
   const handleDisconnect = async () => {
     try {

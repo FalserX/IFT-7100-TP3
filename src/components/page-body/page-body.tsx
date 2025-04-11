@@ -1,24 +1,26 @@
 "use client";
-import { useState } from "react";
-import BannerDescriptor, {
-  BannerType,
-} from "../banner-descriptor/banner-descriptor";
+import { SetStateAction, Dispatch } from "react";
+import { BannerType } from "../banner-descriptor/banner-descriptor";
+import { WalletResponse } from "@/types/wallet-response";
 
 type PageBodyProps = {
-  name: string;
+  setError: Dispatch<SetStateAction<string>>;
+  setBannerActive: Dispatch<SetStateAction<boolean>>;
+  setBannerType: Dispatch<SetStateAction<BannerType>>;
+  walletResponse: WalletResponse | undefined;
 };
 
-const PageBody = ({ name }: PageBodyProps) => {
-  const [bannerMessage, setBannerMessage] = useState<string>();
-  const [bannerType, setBannerType] = useState<BannerType>(BannerType.INFO);
+const PageBody = ({
+  setError,
+  setBannerActive,
+  setBannerType,
+  walletResponse,
+}: PageBodyProps) => {
   return (
     <>
-      <BannerDescriptor
-        bannerType={bannerType}
-        message={bannerMessage}
-        active={!!bannerMessage}
-      />
-      <div className="bg-white min-h-screen rounded-2xl"></div>
+      <div className="bg-white min-h-screen rounded-2xl text-black">
+        {JSON.stringify(walletResponse)}
+      </div>
     </>
   );
 };

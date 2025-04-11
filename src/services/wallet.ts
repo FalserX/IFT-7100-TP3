@@ -60,5 +60,8 @@ export const connect = async (): Promise<WalletResponse | undefined> => {
 };
 
 export const isConnected = (): boolean => {
-  return !!address && !!signer && !!provider;
+  if (address && signer && provider) {
+    return true;
+  }
+  return false;
 };

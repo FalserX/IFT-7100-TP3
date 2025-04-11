@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 
 type PageLogoProps = {
@@ -10,7 +11,7 @@ const PageLogo = ({ siteName }: PageLogoProps) => {
       <Image
         className="size-12 shadow-2xl rounded-2xl items-center justify-center"
         alt="LogoMagasin"
-        src="/next.svg"
+        src="/nextLogo.svg"
         width={32}
         height={32}
       />
