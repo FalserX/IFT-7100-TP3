@@ -1,10 +1,20 @@
-const PageLogo = () => {
+import Image from "next/image";
+
+type PageLogoProps = {
+  siteName: string;
+};
+
+const PageLogo = ({ siteName }: PageLogoProps) => {
   return (
     <div className="inline-flex justify-center items-center">
-      <div className="size-12 shadow-2xl rounded-2xl items-center justify-center">
-        IMAGE
-      </div>
-      <p className="ml-5">NOM DU MAGASIN</p>
+      <Image
+        className="size-12 shadow-2xl rounded-2xl items-center justify-center"
+        alt="LogoMagasin"
+        src="/next.svg"
+        width={32}
+        height={32}
+      />
+      <p className="ml-5">{siteName}</p>
     </div>
   );
 };

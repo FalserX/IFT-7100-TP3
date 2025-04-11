@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { connect, isConnected, disconnect } from "../../services/wallet";
 import { WalletResponse } from "@/types/wallet-response";
 import { ErrorCodes } from "@/utils/errors";
+import Image from "next/image";
 
 type InfoAccountProps = {
   walletResponse: WalletResponse | undefined;
@@ -15,12 +16,19 @@ type DisconnectButtonProps = {
   setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>;
 };
 
-const PageLoginSpace = () => {
+const PageAccountSpace = () => {
   const [walletResponse, setWalletResponse] = useState<
     WalletResponse | undefined
   >();
   return (
     <div className="flex flex-row">
+      <Image
+        src="\User.svg"
+        alt="Compte Usager"
+        width={32}
+        height={32}
+        className="pr-5"
+      />
       {!isConnected() ? (
         <ConnectButton setWalletResponse={setWalletResponse} />
       ) : (
@@ -75,4 +83,4 @@ const ConnectButton = ({ setWalletResponse }: ConnectButtonProps) => {
   );
 };
 
-export default PageLoginSpace;
+export default PageAccountSpace;

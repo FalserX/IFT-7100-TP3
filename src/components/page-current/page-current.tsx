@@ -4,9 +4,11 @@ export type PageCurrentProps = {
 
 const PageCurrent = ({ pageName }: PageCurrentProps) => {
   return (
-    <div className="flex grow justify-center">
-      <p>{pageName}</p>
-    </div>
+    <>
+      <div className="flex grow justify-center">
+        <p>{pageName}</p>
+      </div>
+    </>
   );
 };
 

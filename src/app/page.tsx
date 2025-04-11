@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <main>
-        <PageHeader />
+        <PageHeader pageName="ddsds" siteName="NOM DU MAGASIN" />
         <PageBody name="eee" />
         <PageFooter name="ddd" />
       </main>
