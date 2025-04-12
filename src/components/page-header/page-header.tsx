@@ -4,11 +4,17 @@ import PageCurrent from "../page-current/page-current";
 import AccountDropdownMenu, {
   AccountDropdownItemButton,
 } from "../account-dropdown-menu/account-dropdown-menu";
-import { connect, disconnect, isConnected } from "@/services/wallet";
+import {
+  connect,
+  disconnect,
+  initWallet,
+  isConnected,
+} from "@/services/wallet";
+import { getCookie, setCookie } from "../../utils/cookie";
 import { WalletResponse } from "@/types/wallet-response";
 import { ErrorCodes } from "@/utils/errors";
 import { BannerType } from "../banner-descriptor/banner-descriptor";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 type PageHeaderProps = {
   pageName: string;
@@ -27,6 +33,8 @@ const connectAction = async (
   setBannerActive: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
+    console.log("dddd");
+    setCookie("walletDisconnect", "false", 1);
     setWalletResponse(await connect());
   } catch (err) {
     setError(ErrorCodes.CONNECT_ERROR);
@@ -36,15 +44,15 @@ const connectAction = async (
   }
 };
 
-const disconnectAction = (
+const disconnectAction = async (
   setError: Dispatch<SetStateAction<string>>,
   setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>,
   setBannerType: Dispatch<SetStateAction<BannerType>>,
   setBannerActive: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
-    disconnect();
-    setWalletResponse(undefined);
+    setWalletResponse(await disconnect());
+    setCookie("walletDisconnect", "true", 1);
   } catch (err) {
     console.error(ErrorCodes.CONNECT_ERROR, err);
     setError(ErrorCodes.CONNECT_ERROR);
@@ -62,6 +70,17 @@ const PageHeader = ({
   setBannerType,
   walletResponse,
 }: PageHeaderProps) => {
+  useEffect(() => {
+    const inWallet = async () => {
+      if (!getCookie("walletDisconnect")) {
+        setWalletResponse(await initWallet());
+        setCookie("walletDisconnect", "false");
+      }
+    };
+    if (!walletResponse) {
+      inWallet();
+    }
+  }, [setWalletResponse, walletResponse]);
   return (
     <header className="flex flex-col gap-6 items-center p-7 md:flex-row md:gap-12 rounded-2xl bg-gray-700">
       <PageLogo siteName={siteName} />
@@ -95,7 +114,7 @@ const PageHeader = ({
                 buttonIconAlt="Icone Déconnexion"
                 buttonIconSrc="/Exit.svg"
                 label="Se déconnecter"
-                onClick={() =>
+                onClick={async () =>
                   disconnectAction(
                     setError,
                     setWalletResponse,
@@ -111,14 +130,14 @@ const PageHeader = ({
                 buttonIconAlt="Icone Connexion"
                 buttonIconSrc="/Enter.svg"
                 label="Se connecter"
-                onClick={async () =>
-                  connectAction(
+                onClick={async () => {
+                  await connectAction(
                     setError,
                     setWalletResponse,
                     setBannerType,
                     setBannerActive
-                  )
-                }
+                  );
+                }}
               />
             </>
           )}

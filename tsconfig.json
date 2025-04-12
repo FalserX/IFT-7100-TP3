@@ -33,7 +33,10 @@
     "**/*.tsx",
     ".next/types/**.*.ts",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/services/wallet.ts",
+    "src/utils/errors.ts",
+    "src/utils/dates.ts"
   ],
   "exclude": [
     "node_modules"

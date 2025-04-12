@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 type AccountDropdownMenuProps = React.PropsWithChildren<{
@@ -16,14 +16,12 @@ type AccountDropdownItemButtonProps = {
 
 type AccountDropdownMenuButtonProps = {
   onClick: () => void;
-  onBlur: () => void;
   label: string;
 };
 
 const AccountDropdownMenuButton = ({
   label,
   onClick,
-  onBlur,
 }: AccountDropdownMenuButtonProps) => {
   return (
     <div className="flex flex-row border-2 rounded-xl p-2">
@@ -34,9 +32,7 @@ const AccountDropdownMenuButton = ({
         height={32}
         className="pr-5"
       />
-      <button onClick={onClick} onBlur={onBlur}>
-        {label}
-      </button>
+      <button onClick={onClick}>{label}</button>
     </div>
   );
 };
@@ -46,15 +42,25 @@ const AccountDropdownMenu = ({
   children,
 }: AccountDropdownMenuProps) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
-    <>
+    <div ref={menuRef}>
       <AccountDropdownMenuButton
         label={dropdownLabel}
         onClick={() => {
           setDropdownOpen(!dropdownOpen);
-        }}
-        onBlur={() => {
-          setDropdownOpen(false);
         }}
       />
       {dropdownOpen && (
@@ -62,7 +68,7 @@ const AccountDropdownMenu = ({
           {children ? children : <div></div>}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

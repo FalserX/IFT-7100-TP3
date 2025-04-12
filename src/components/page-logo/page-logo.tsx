@@ -11,7 +11,7 @@ const PageLogo = ({ siteName }: PageLogoProps) => {
       <Image
         className="size-12 shadow-2xl rounded-2xl items-center justify-center"
         alt="LogoMagasin"
-        src="/nextLogo.svg"
+        src="/Logo.svg"
         width={32}
         height={32}
       />

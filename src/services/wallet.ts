@@ -1,3 +1,4 @@
+"use client";
 import { Eip1193Provider, BrowserProvider, JsonRpcSigner } from "ethers";
 import { WalletResponse } from "../types/wallet-response";
 import { ErrorCodes } from "../utils/errors";
@@ -12,6 +13,16 @@ declare global {
   }
 }
 
+export const initWallet = async (): Promise<WalletResponse | undefined> => {
+  if (window.ethereum) {
+    provider = new BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+    address = signer?.address;
+    return { address, provider, signer };
+  }
+  return;
+};
+
 export const disconnect = async () => {
   if (!window.ethereum) {
     console.error(ErrorCodes.CONNECT_ERROR);
@@ -20,6 +31,7 @@ export const disconnect = async () => {
   provider = undefined;
   address = undefined;
   signer = undefined;
+  return undefined;
 };
 
 export const getProvider = (): BrowserProvider | undefined => {
@@ -51,7 +63,6 @@ export const connect = async (): Promise<WalletResponse | undefined> => {
     console.error(ErrorCodes.CONNECT_ERROR);
     return;
   }
-
   provider = new BrowserProvider(window.ethereum);
   signer = await provider.getSigner();
   address = await signer.getAddress();
@@ -60,8 +71,5 @@ export const connect = async (): Promise<WalletResponse | undefined> => {
 };
 
 export const isConnected = (): boolean => {
-  if (address && signer && provider) {
-    return true;
-  }
-  return false;
+  return !!(address && signer && provider);
 };
