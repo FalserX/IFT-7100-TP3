@@ -2,13 +2,15 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 type AccountDropdownMenuProps = React.PropsWithChildren<{
   dropdownLabel: string;
 }>;
 
 type AccountDropdownItemButtonProps = {
-  onClick: () => void;
+  onClick?: () => void;
+  href?: string;
   label: string;
   buttonIconSrc: string;
   buttonIconAlt: string;
@@ -77,8 +79,23 @@ export const AccountDropdownItemButton = ({
   buttonIconSrc,
   label,
   onClick,
+  href,
 }: AccountDropdownItemButtonProps) => {
-  return (
+  return href ? (
+    <Link
+      href={href}
+      className="flex border-2 border-white min-w-fit min-h-12 rounded-xl items-center"
+    >
+      <Image
+        src={buttonIconSrc}
+        alt={buttonIconAlt}
+        width={58}
+        height={58}
+        className="pl-5 pr-5"
+      />
+      {label}
+    </Link>
+  ) : (
     <div className="flex border-2 border-white min-w-fit min-h-12 rounded-xl">
       <Image
         src={buttonIconSrc}

@@ -1,6 +1,7 @@
 "use client";
 import { getCurrentYear } from "@/utils/dates";
 import Image from "next/image";
+import Link from "next/link";
 type PageFooterProps = {
   name: string;
   siteName: string;
@@ -21,13 +22,20 @@ const PageFooter = ({
       </div>
       <div className="inline-flex grow justify-end">
         <div className="inline-flex mt-2 mr-1.5">{name}</div>
-        <Image
-          src={frontEndSrcImage}
-          alt={frontEndAltImage}
-          width={64}
-          height={64}
-          className="mr-2"
-        />
+        <Link
+          href="https://nextjs.org"
+          className="mt-3"
+          target="_blank"
+          rel="noopener"
+        >
+          <Image
+            src={frontEndSrcImage}
+            alt={frontEndAltImage}
+            width={64}
+            height={64}
+            className="mr-2"
+          />
+        </Link>
       </div>
     </div>
   );
