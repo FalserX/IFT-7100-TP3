@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 export enum BannerType {
@@ -29,7 +30,7 @@ const getBannerTypeColor = (bannerType: BannerType) => {
       return "bg-white-700";
   }
 };
-const getImageBannerType = (bannerType: BannerType) => {
+const getImageBannerType = (bannerType: BannerType, bannerImgAlt: string) => {
   const srcMap: Record<BannerType, string> = {
     [BannerType.CONFIRM]: "/Confirm.svg",
     [BannerType.ERROR]: "/Error.svg",
@@ -38,7 +39,7 @@ const getImageBannerType = (bannerType: BannerType) => {
   };
   return (
     <Image
-      alt="icone de bannière"
+      alt={bannerImgAlt}
       src={srcMap[bannerType]}
       width={48}
       height={48}
@@ -54,6 +55,13 @@ const BannerDescriptor = ({
   onTransitionEnd,
   onClose,
 }: BannerDescriptorProps) => {
+  const t = useTranslations();
+  const bannerTypeImgAltTranslate: Record<BannerType, string> = {
+    [BannerType.CONFIRM]: "banner.btn-confirm-alt",
+    [BannerType.ERROR]: "banner.btn-error-alt",
+    [BannerType.INFO]: "banner.btn-info-alt",
+    [BannerType.WARNING]: "banner.btn-warning-alt",
+  };
   return (
     <div
       onTransitionEnd={onTransitionEnd}
@@ -69,13 +77,16 @@ const BannerDescriptor = ({
         }
         `}
     >
-      {getImageBannerType(bannerType)}
+      {getImageBannerType(
+        bannerType,
+        `${t(`${bannerTypeImgAltTranslate[bannerType]}`)}`
+      )}
       <span className="text-sm">{message}</span>
       {onClose && (
         <button
           onClick={onClose}
           className="ml-3 text-white hover:text-gray-300 transition"
-          aria-label="Fermer la bannière"
+          aria-label="Fermer"
         >
           ✕
         </button>
