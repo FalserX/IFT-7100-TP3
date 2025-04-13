@@ -1,7 +1,10 @@
+import { useTranslations } from "next-intl";
+
 export default function CommandsPage() {
+  const t = useTranslations();
   return (
     <main className="min-h-[85vh] bg-white rounded-2xl">
-      <h2 className="items-center text-black">Vos commandes</h2>
+      <h2 className="items-center text-black">{`${t("commands.content")}`}</h2>
     </main>
   );
 }

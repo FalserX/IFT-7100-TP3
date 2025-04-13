@@ -69,12 +69,12 @@
     }
   },
   "home": {
-    "test": "Test"
+    "content": "Test"
   },
   "basket": {
-    "test": "Test"
+    "content": "Votre panier"
   },
   "commands": {
-    "test": "Test"
+    "content": "Vos commandes"
   }
 }
