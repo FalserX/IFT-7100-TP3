@@ -19,6 +19,14 @@ contract Marketplace {
         uint totalRating;
         uint ratingCount;
     }
+    struct Transaction {
+        address buyer;
+        uint productId;
+        uint quantity;
+        uint timestamp;
+    }
+    
+    Transaction[] public transactions;
 
     mapping(uint => Product) public products;
     mapping(address => Seller) public sellers;
@@ -61,6 +69,8 @@ contract Marketplace {
         require(msg.value >= totalPrice, "Insufficient payment.");
 
         product.quantityAvailable -= _quantity;
+        transactions.push(Transaction(msg.sender, _productId, _quantity, block.timestamp));
+
         product.seller.transfer(totalPrice);
 
         // Remboursement si trop payé
@@ -103,4 +113,20 @@ contract Marketplace {
             product.quantityAvailable
         );
     }
+
+    function getAllProducts() external view returns (Product[] memory) {
+        Product[] memory result = new Product[](productCounter);
+        uint count = 0;
+        for (uint i = 1; i <= productCounter; i++) {
+            result[count] = products[i];
+            count++;
+        }
+        return result;
+    }
+
+
+    function getAllTransactions() external view returns (Transaction[] memory) {
+        return transactions;
+    }
+
 }
