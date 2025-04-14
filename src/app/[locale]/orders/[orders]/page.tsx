@@ -3,7 +3,7 @@ import Loading from "@/components/loading/loading";
 import renderTranslate from "@/utils/renderTranslate";
 import { useEffect, useState } from "react";
 
-export default function Home({
+export default function OrdersOrderPage({
   currentLocale,
   loadingFallback = (
     <Loading
@@ -13,21 +13,22 @@ export default function Home({
   ),
 }: {
   currentLocale: string;
-  loadingFallback: React.ReactNode;
+  loadingFallback?: React.ReactNode;
 }) {
-  const [homeTitle, setHomeTitle] = useState<string>();
+  const [orderTitle, setOrderTitle] = useState<string>();
+
   useEffect(() => {
-    const getFetchTranslation = async (key: string, locale: string) => {
-      return await renderTranslate(key, locale);
+    const getFetchTranslations = async (message: string, locale: string) => {
+      return renderTranslate(message, locale);
     };
-    getFetchTranslation("home.title", currentLocale).then((res) =>
-      setHomeTitle(res)
-    );
+    getFetchTranslations("orders.title", currentLocale).then((res) => {
+      setOrderTitle(res);
+    });
   }, [currentLocale]);
   return (
     <main className="min-h-[85vh] bg-white rounded-2xl">
       <h2 className="items-center text-black">
-        {homeTitle ? homeTitle : loadingFallback}
+        {!orderTitle ? orderTitle : loadingFallback}
       </h2>
     </main>
   );

@@ -6,8 +6,8 @@
     "basket": {
       "title": "Basket"
     },
-    "commands": {
-      "title": "Commands"
+    "orders": {
+      "title": "Orders"
     },
     "btn-framework-logo-alt": "NextJS logo",
     "framework-message": "Create with ",
@@ -32,7 +32,13 @@
     "wallet-address-error": "An error occured when attempting to gather the wallet address.",
     "wallet-signer-error": "An error occured when attempting to gather the signer (owner) of the wallet.",
     "wallet-no-window-error": "No wallet found. Please try to install a wallet provider, example Metamask.",
-    "ask-admin-error": "Communicate with the site admin. Give him this error message : "
+    "ask-admin-error": "Communicate with the site admin. Give him this error message : ",
+    "basket": {
+      "product": {
+        "not-found": "Sorry the search product requested is not found. Please, try again with others settings.",
+        "empty": "Sorry but your basket is empty, can you fill it before attempting to try gather a product?"
+      }
+    }
   },
   "account-dropdown": {
     "btn-alt": "User account Icon",
@@ -45,36 +51,60 @@
         "btn-tooltip": "Your wallet account address"
       },
       "basket": {
-        "btn-label": "Basket ",
+        "btn-label": "Basket",
         "btn-full-alt": "Basket full icon",
         "btn-empty-alt": "Basket empty icon",
         "btn-empty-tooltip": "Your basket is empty",
         "btn-full-tooltip": "Your basket have fruits in it"
       },
-      "commands": {
-        "btn-label": "Commands ",
-        "btn-alt": "Commands icon",
-        "btn-tooltip": "Your previous commands"
+      "orders": {
+        "btn-label": "Orders",
+        "btn-alt": "Orders icon",
+        "btn-tooltip": "Your previous orders"
       },
       "logout": {
-        "btn-label": "Logout ",
+        "btn-label": "Logout",
         "btn-alt": "Logout icon",
         "btn-tooltip": "Logout from your account"
       },
       "login": {
-        "btn-label": "Login ",
+        "btn-label": "Login",
         "btn-alt": "Login icon",
         "btn-tooltip": "Login to your account"
       }
     }
   },
   "home": {
-    "content": "Test"
+    "title": "Test"
   },
   "basket": {
-    "content": "Your basket"
+    "title": "Your cart",
+    "empty-basket": "Empty Cart",
+    "products": {
+      "name": "Name",
+      "merchant": "Merchant",
+      "unit-cost": "Unit cost ",
+      "qty": "Qty",
+      "cost": "Cost ",
+      "action": "Actions",
+      "remove-btn-label": "Remove",
+      "remove-btn-alt": "Remove icon",
+      "remove-btn-tooltip": "Remove this product from the basket",
+      "qty-btn-minus-alt": "Minus product Icon",
+      "qty-btn-plus-alt": "Plus product Icon",
+      "qty-btn-minus-tooltip": "Remove this product one time",
+      "qty-btn-plus-tooltip": "Add this product one time"
+    }
   },
-  "commands": {
-    "content": "Your commands"
+  "products": {
+    "name": "Name",
+    "merchant": "Merchant",
+    "unit-cost": "Unit cost ",
+    "qty": "Qty",
+    "cost": "Cost "
+  },
+  "orders": {
+    "title": "Your orders",
+    "empty-commands": "Empty Orders. You can try your first order by choosing a merchant and buy one of their products."
   }
 }

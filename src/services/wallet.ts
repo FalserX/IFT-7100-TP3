@@ -19,6 +19,7 @@ enum ErrorType {
   WALLET_ADDRESS_ERROR = 3,
   WALLET_SIGNER_ERROR = 4,
   WALLET_NO_WINDOW_ERROR = 5,
+  OTHER = 6,
 }
 
 const ErrorCodes = (errorType: ErrorType): string => {
@@ -42,7 +43,7 @@ const ErrorCodes = (errorType: ErrorType): string => {
       return "errors.wallet-signer-error";
     }
     default:
-      return "";
+      return "errors.ask-admin-error";
   }
 };
 
@@ -107,4 +108,11 @@ export const connect = async (): Promise<
 
 export const isConnected = (): boolean => {
   return !!(address && signer && provider);
+};
+
+export const getWallet = async (): Promise<WalletResponse | string> => {
+  if (!isConnected) {
+    return ErrorCodes(ErrorType.OTHER);
+  }
+  return { address, signer, provider } as WalletResponse;
 };

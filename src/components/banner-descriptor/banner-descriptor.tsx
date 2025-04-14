@@ -1,5 +1,6 @@
-import { useTranslations } from "next-intl";
+import renderTranslate from "@/utils/renderTranslate";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export enum BannerType {
   ERROR = 0,
@@ -12,6 +13,7 @@ type BannerDescriptorProps = {
   bannerType: BannerType;
   message?: string;
   active?: boolean;
+  currentLocale: string;
   onTransitionEnd: () => void;
   onClose?: () => void;
 };
@@ -54,14 +56,25 @@ const BannerDescriptor = ({
   active = false,
   onTransitionEnd,
   onClose,
+  currentLocale,
 }: BannerDescriptorProps) => {
-  const t = useTranslations();
-  const bannerTypeImgAltTranslate: Record<BannerType, string> = {
-    [BannerType.CONFIRM]: "banner.btn-confirm-alt",
-    [BannerType.ERROR]: "banner.btn-error-alt",
-    [BannerType.INFO]: "banner.btn-info-alt",
-    [BannerType.WARNING]: "banner.btn-warning-alt",
-  };
+  const [imgBannerAlt, setImgBannerAlt] = useState<string>("");
+  useEffect(() => {
+    const getFetchTranslations = async (key: string, locale: string) => {
+      return await renderTranslate(key, locale);
+    };
+    const bannerTypeImgAltTranslate: Record<BannerType, string> = {
+      [BannerType.CONFIRM]: "banner.btn-confirm-alt",
+      [BannerType.ERROR]: "banner.btn-error-alt",
+      [BannerType.INFO]: "banner.btn-info-alt",
+      [BannerType.WARNING]: "banner.btn-warning-alt",
+    };
+    getFetchTranslations(
+      bannerTypeImgAltTranslate[bannerType],
+      currentLocale
+    ).then((res) => setImgBannerAlt(res));
+  }, [bannerType, currentLocale]);
+
   return (
     <div
       onTransitionEnd={onTransitionEnd}
@@ -77,10 +90,7 @@ const BannerDescriptor = ({
         }
         `}
     >
-      {getImageBannerType(
-        bannerType,
-        `${t(`${bannerTypeImgAltTranslate[bannerType]}`)}`
-      )}
+      {getImageBannerType(bannerType, `${imgBannerAlt}`)}
       <span className="text-sm">{message}</span>
       {onClose && (
         <button

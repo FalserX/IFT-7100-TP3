@@ -1,3 +1,4 @@
+"use client";
 export default function MerchantsPage() {
   return (
     <main className="min-h-[85vh] bg-white rounded-2xl">

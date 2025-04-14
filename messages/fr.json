@@ -4,9 +4,9 @@
       "title": "Accueil"
     },
     "basket": {
-      "title": "Votre panier"
+      "title": "Panier"
     },
-    "commands": {
+    "orders": {
       "title": "Commandes"
     },
     "btn-framework-logo-alt": "Logo NextJS",
@@ -32,7 +32,13 @@
     "wallet-address-error": "Une erreur est survenue lors de la récupération de l'adresse du portefeuille.",
     "wallet-signer-error": "Une erreur est survenue lors de la récupération du signataire (propriétaire) du portefeuille.",
     "wallet-no-window-error": "Aucun portefeuille trouvé. S.V.P. Essayez d'installer un fournisseur de portefeuille. Exemple Metamask.",
-    "ask-admin-error": "Veuillez communiquer avec l'administrateur du site. Fournissez le message d'erreur suivant: "
+    "ask-admin-error": "Veuillez communiquer avec l'administrateur du site. Fournissez le message d'erreur suivant: ",
+    "basket": {
+      "product": {
+        "not-found": "Désolé, Le produit que vous rechercher n'a pu être trouvé. Veuillez préciser de nouveaux champs de recherche.",
+        "empty": "Désolé, votre panier est vide actuellement. Vous pouvez réessayer ultérieurement en ayant un produit à l'intérieur de ce dernier."
+      }
+    }
   },
   "account-dropdown": {
     "btn-alt": "Icône du compte",
@@ -45,36 +51,60 @@
         "btn-tooltip": "Votre adresse de compte du portefeuille"
       },
       "basket": {
-        "btn-label": "Panier ",
+        "btn-label": "Panier",
         "btn-full-alt": "Icône du panier plein",
         "btn-empty-alt": "Icône du panier vide",
         "btn-empty-tooltip": "Votre panier est vide",
         "btn-full-tooltip": "Votre panier contient des fruits"
       },
-      "commands": {
+      "orders": {
         "btn-label": "Commandes",
         "btn-alt": "Icône des commandes",
         "btn-tooltip": "Vos précédentes commandes"
       },
       "logout": {
-        "btn-label": "Déconnexion ",
+        "btn-label": "Déconnexion",
         "btn-alt": "Icône de déconnexion",
         "btn-tooltip": "Se déconnecter"
       },
       "login": {
-        "btn-label": "Connexion ",
+        "btn-label": "Connexion",
         "btn-alt": "Icône de connexion",
         "btn-tooltip": "Se connecter"
       }
     }
   },
   "home": {
-    "content": "Test"
+    "title": "Test"
   },
   "basket": {
-    "content": "Votre panier"
+    "title": "Votre panier",
+    "empty-basket": "Panier vide",
+    "products": {
+      "name": "Nom",
+      "merchant": "Marchand",
+      "unit-cost": "Coût unitaire ",
+      "qty": "Qté",
+      "cost": "Coût ",
+      "action": "Actions",
+      "remove-btn-label": "Retirer",
+      "remove-btn-alt": "Icône de retrait",
+      "remove-btn-tooltip": "Retirer le produit de la commande",
+      "qty-btn-minus-alt": "Icône de produit en moins",
+      "qty-btn-plus-alt": "Icône de produit en plus",
+      "qty-btn-minus-tooltip": "Retirer ce produit une fois",
+      "qty-btn-plus-tooltip": "Ajouter ce produit une fois"
+    }
   },
-  "commands": {
-    "content": "Vos commandes"
+  "products": {
+    "name": "Nom",
+    "merchant": "Marchand",
+    "unit-cost": "Coût unitaire ",
+    "qty": "Qté",
+    "cost": "Coût "
+  },
+  "orders": {
+    "title": "Vos commandes",
+    "empty-orders": "Commandes vides. Essayez votre première commande en choissisant un marchand et d'y acheter l'un de ses produits."
   }
 }

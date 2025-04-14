@@ -1,15 +1,16 @@
 "use client";
 import PageLogo from "../page-logo/page-logo";
-import PageCurrent from "../page-current/page-current";
 import AccountDropdownMenu, {
   AccountDropdownItemButton,
 } from "../account-dropdown-menu/account-dropdown-menu";
 import {
   connect,
   disconnect,
+  getWallet,
   initWallet,
   isConnected,
 } from "@/services/wallet";
+import { getBasket } from "@/services/basket";
 import { WalletResponse } from "@/types/wallet-response";
 import { BannerType } from "../banner-descriptor/banner-descriptor";
 import { Dispatch, SetStateAction, useEffect } from "react";
@@ -18,7 +19,7 @@ import LanguageSwitcher from "../language-switcher/language-switcher";
 import { useParams } from "next/navigation";
 
 type PageHeaderProps = {
-  pageName: string;
+  pageName: string | React.ReactNode;
   siteName: string;
   walletResponse: WalletResponse | undefined;
   setBannerActive: Dispatch<SetStateAction<boolean>>;
@@ -30,9 +31,7 @@ const connectAction = async (
   setError: Dispatch<SetStateAction<string>>,
   setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>,
   setBannerType: Dispatch<SetStateAction<BannerType>>,
-  setBannerActive: Dispatch<SetStateAction<boolean>>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t: any
+  setBannerActive: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
     const walletResult = await connect();
@@ -43,7 +42,7 @@ const connectAction = async (
       walletResult.includes("errors")
     ) {
       setWalletResponse(undefined);
-      setError(`${t(`${walletResult}`)}`);
+      setError(`${walletResult}`);
       setBannerType(BannerType.ERROR);
       setBannerActive(true);
     } else {
@@ -51,10 +50,10 @@ const connectAction = async (
       localStorage.setItem("walletDisconnect", "false");
     }
   } catch (err) {
-    setError(`${t("errors.ask-admin-error")} ${err}`);
+    setError(`errors.ask-admin-error |${err}`);
     setBannerType(BannerType.ERROR);
     setBannerActive(true);
-    console.error(`${t("errors.ask-admin-error")} ${err}`, err);
+    console.error(`errors.ask-admin-error | ${err}`, err);
   }
 };
 
@@ -62,9 +61,7 @@ const disconnectAction = async (
   setError: Dispatch<SetStateAction<string>>,
   setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>,
   setBannerType: Dispatch<SetStateAction<BannerType>>,
-  setBannerActive: Dispatch<SetStateAction<boolean>>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t: any
+  setBannerActive: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
     const walletResult = await disconnect();
@@ -74,11 +71,11 @@ const disconnectAction = async (
     } else {
       setBannerActive(true);
       setBannerType(BannerType.ERROR);
-      setError(`${t(`${walletResult}`)}`);
+      setError(`${walletResult}`);
     }
   } catch (err) {
-    console.error(`${t("errors.connect-error")}`, err);
-    setError(`${t("errors.connect-error")}`);
+    console.error(`errors.connect-error`, err);
+    setError(`errors.connect-error`);
     setBannerType(BannerType.ERROR);
     setBannerActive(true);
   }
@@ -102,119 +99,151 @@ const PageHeader = ({
         setWalletResponse(await initWallet());
         localStorage.setItem("walletDisconnect", "false");
       }
+      if (isConnected()) {
+        const walletRespon = await getWallet();
+        if (
+          walletRespon.toString().includes("ask") ||
+          walletRespon.toString().includes("errors")
+        ) {
+          setBannerActive(true);
+          setBannerType(BannerType.ERROR);
+          setError(walletRespon.toString());
+        }
+        setWalletResponse(walletRespon as WalletResponse);
+      }
     };
     if (!walletResponse) {
       inWallet();
     }
-  }, [setWalletResponse, walletResponse]);
+  }, [
+    setWalletResponse,
+    walletResponse,
+    setBannerActive,
+    setBannerType,
+    setError,
+    t,
+  ]);
   return (
-    <header className="flex flex-col grow rounded-2xl bg-gray-700">
+    <header className="flex w-full flex-col grow rounded-2xl bg-gray-700">
       <div className="flex flex-row gap-6 items-center p-2 pl-5 pr-5 pt-5">
         <PageLogo
+          currentLocale={currentLocale}
           siteName={siteName}
           href={`/${currentLocale}`}
-          imgAlt={`${t("client-layout.btn-logo-alt")}`}
+          imgAlt={`client-layout.btn-logo-alt`}
           imgSrc={`/Logo.svg`}
-          tooltip={`${t("client-layout.btn-logo-tooltip")}`}
+          tooltip={`client-layout.btn-logo-tooltip`}
         />
-        <PageCurrent pageName={pageName} />
-        <LanguageSwitcher
-          imgAlt={`${t("language-switch.btn-alt")}`}
-          imgSrc={`/Globe.svg`}
-          tooltip={`${t("language-switch.btn-tooltip")}`}
-        />
-        <AccountDropdownMenu>
-          <>
-            {isConnected() ? (
-              <>
-                <AccountDropdownItemButton
-                  buttonIconAlt={`${t(
-                    "account-dropdown.account-dropdown-item.wallet.btn-alt"
-                  )}`}
-                  buttonIconSrc="/Wallet.svg"
-                  label={`${t(
-                    "account-dropdown.account-dropdown-item.wallet.btn-label"
-                  )} ${walletResponse?.address.substring(0, 15)}...`}
-                  onClick={() => {}}
-                  tooltip={`${t(
-                    "account-dropdown.account-dropdown-item.wallet.btn-tooltip"
-                  )}`}
-                />
-                <AccountDropdownItemButton
-                  buttonIconAlt={`${t(
-                    "account-dropdown.account-dropdown-item.basket.btn-empty-alt"
-                  )}`}
-                  buttonIconSrc="/EmptyBasket.svg"
-                  label={`${t(
-                    "account-dropdown.account-dropdown-item.basket.btn-label"
-                  )}`}
-                  tooltip={`${t(
-                    "account-dropdown.account-dropdown-item.basket.btn-empty-tooltip"
-                  )}`}
-                  href={`/${currentLocale}/basket`}
-                />
-                <AccountDropdownItemButton
-                  buttonIconAlt={`${t(
-                    "account-dropdown.account-dropdown-item.commands.btn-alt"
-                  )}`}
-                  buttonIconSrc="/list.svg"
-                  label={`${t(
-                    "account-dropdown.account-dropdown-item.commands.btn-label"
-                  )}`}
-                  tooltip={`${t(
-                    "account-dropdown.account-dropdown-item.commands.btn-tooltip"
-                  )}`}
-                  href={`/${currentLocale}/commands`}
-                />
-                <AccountDropdownItemButton
-                  buttonIconAlt={`${t(
-                    "account-dropdown.account-dropdown-item.logout.btn-alt"
-                  )}`}
-                  buttonIconSrc="/Exit.svg"
-                  label={`${t(
-                    "account-dropdown.account-dropdown-item.logout.btn-label"
-                  )}`}
-                  tooltip={`${t(
-                    "account-dropdown.account-dropdown-item.logout.btn-tooltip"
-                  )}`}
-                  onClick={async () =>
-                    disconnectAction(
-                      setError,
-                      setWalletResponse,
-                      setBannerType,
-                      setBannerActive,
-                      t
-                    )
-                  }
-                />
-              </>
-            ) : (
-              <>
-                <AccountDropdownItemButton
-                  buttonIconAlt={`${t(
-                    "account-dropdown.account-dropdown-item.login.btn-alt"
-                  )}`}
-                  buttonIconSrc="/Enter.svg"
-                  label={`${t(
-                    "account-dropdown.account-dropdown-item.login.btn-label"
-                  )}`}
-                  tooltip={`${t(
-                    "account-dropdown.account-dropdown-item.login.btn-tooltip"
-                  )}`}
-                  onClick={async () => {
-                    await connectAction(
-                      setError,
-                      setWalletResponse,
-                      setBannerType,
-                      setBannerActive,
-                      t
-                    );
-                  }}
-                />
-              </>
-            )}
-          </>
-        </AccountDropdownMenu>
+        <div className="flex grow justify-center items-center font-bold">
+          <span>{pageName}</span>
+        </div>
+        <div className="flex gap-6 justify-end">
+          <LanguageSwitcher
+            currentLocale={currentLocale}
+            imgAlt={`language-switch.btn-alt`}
+            imgSrc={`/Globe.svg`}
+            tooltip={`language-switch.btn-tooltip`}
+          />
+          <AccountDropdownMenu currentLocale={currentLocale}>
+            <>
+              {isConnected() ? (
+                <>
+                  <AccountDropdownItemButton
+                    currentLocale={currentLocale}
+                    buttonIconAlt={
+                      "account-dropdown.account-dropdown-item.wallet.btn-alt"
+                    }
+                    buttonIconSrc="/Wallet.svg"
+                    label={`account-dropdown.account-dropdown-item.wallet.btn-label|${walletResponse?.address.substring(
+                      0,
+                      15
+                    )}...`}
+                    tooltip={
+                      "account-dropdown.account-dropdown-item.wallet.btn-tooltip"
+                    }
+                  />
+                  <AccountDropdownItemButton
+                    currentLocale={currentLocale}
+                    buttonIconAlt={`${
+                      getBasket().products.length > 0
+                        ? "account-dropdown.account-dropdown-item.basket.btn-full-alt"
+                        : "account-dropdown.account-dropdown-item.basket.btn-empty-alt"
+                    }`}
+                    buttonIconSrc="/EmptyBasket.svg"
+                    label={
+                      "account-dropdown.account-dropdown-item.basket.btn-label"
+                    }
+                    tooltip={`${
+                      getBasket().products.length > 0
+                        ? "account-dropdown.account-dropdown-item.basket.btn-full-tooltip"
+                        : "account-dropdown.account-dropdown-item.basket.btn-empty-tooltip"
+                    }`}
+                    href={`/${currentLocale}/basket`}
+                  />
+                  <AccountDropdownItemButton
+                    currentLocale={currentLocale}
+                    buttonIconAlt={
+                      "account-dropdown.account-dropdown-item.orders.btn-alt"
+                    }
+                    buttonIconSrc="/list.svg"
+                    label={
+                      "account-dropdown.account-dropdown-item.orders.btn-label"
+                    }
+                    tooltip={
+                      "account-dropdown.account-dropdown-item.orders.btn-tooltip"
+                    }
+                    href={`/${currentLocale}/orders`}
+                  />
+                  <AccountDropdownItemButton
+                    buttonIconAlt={
+                      "account-dropdown.account-dropdown-item.logout.btn-alt"
+                    }
+                    currentLocale={currentLocale}
+                    buttonIconSrc="/Exit.svg"
+                    label={
+                      "account-dropdown.account-dropdown-item.logout.btn-label"
+                    }
+                    tooltip={
+                      "account-dropdown.account-dropdown-item.logout.btn-tooltip"
+                    }
+                    onClick={async () =>
+                      disconnectAction(
+                        setError,
+                        setWalletResponse,
+                        setBannerType,
+                        setBannerActive
+                      )
+                    }
+                  />
+                </>
+              ) : (
+                <>
+                  <AccountDropdownItemButton
+                    currentLocale={currentLocale}
+                    buttonIconAlt={
+                      "account-dropdown.account-dropdown-item.login.btn-alt"
+                    }
+                    buttonIconSrc="/Enter.svg"
+                    label={
+                      "account-dropdown.account-dropdown-item.login.btn-label"
+                    }
+                    tooltip={
+                      "account-dropdown.account-dropdown-item.login.btn-tooltip"
+                    }
+                    onClick={async () => {
+                      await connectAction(
+                        setError,
+                        setWalletResponse,
+                        setBannerType,
+                        setBannerActive
+                      );
+                    }}
+                  />
+                </>
+              )}
+            </>
+          </AccountDropdownMenu>
+        </div>
       </div>
       <div className="flex flex-row grow p-5 items-center">
         <button className="flex border-2 border-white min-w-fit min-h-12 rounded-xl">

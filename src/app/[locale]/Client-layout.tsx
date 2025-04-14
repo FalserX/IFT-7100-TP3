@@ -8,7 +8,8 @@ import BannerDescriptor, {
 } from "@/components/banner-descriptor/banner-descriptor";
 import PageFooter from "@/components/page-footer/page-footer";
 import { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import renderTranslate from "@/utils/renderTranslate";
+import Loading from "@/components/loading/loading";
 
 const ClientLayout = ({
   metadata,
@@ -17,12 +18,20 @@ const ClientLayout = ({
   metadata: Metadata;
   children: React.ReactNode;
 }) => {
+  const loadingFallback = (
+    <Loading
+      className="w-[1rem] h-[1rem] my-1 items-center"
+      spinnerColor="#FFF"
+    />
+  );
   const siteName = useMemo<string>(
     () => (metadata?.title ? (metadata.title as string) : ""),
     [metadata]
   );
   const [isClient, setIsClient] = useState<boolean>(true);
-  const [pageName, setPageName] = useState<string>("");
+  const [pageName, setPageName] = useState<string | React.ReactNode>(
+    loadingFallback
+  );
   const pathname = usePathname();
   const [walletResponse, setWalletResponse] = useState<
     WalletResponse | undefined
@@ -32,21 +41,6 @@ const ClientLayout = ({
   const [bannerType, setBannerType] = useState<BannerType>(BannerType.INFO);
   const [bannerDisplayed, setBannerDisplayed] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const t = useTranslations();
-  const showBanner = (
-    message: string,
-    type: BannerType = BannerType.INFO,
-    duration: number = 5000
-  ) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    setBannerMessage(message);
-    setBannerType(type);
-    setBannerDisplayed(true);
-    setBannerVisible(true);
-    timerRef.current = setTimeout(() => {
-      setBannerVisible(false);
-    }, duration);
-  };
 
   const handleBannerClose = () => {
     setBannerVisible(false);
@@ -56,6 +50,25 @@ const ClientLayout = ({
 
   useEffect(() => {
     setIsClient(true);
+    const showBanner = (
+      message: string,
+      type: BannerType = BannerType.INFO,
+      duration: number = 5000
+    ) => {
+      const getMessages = async (message: string, locale: string) => {
+        return await renderTranslate(message, locale);
+      };
+      if (timerRef.current) clearTimeout(timerRef.current);
+      getMessages(message, currentLocale).then((message) => {
+        setBannerMessage(message);
+        setBannerType(type);
+        setBannerDisplayed(true);
+        setBannerVisible(true);
+        timerRef.current = setTimeout(() => {
+          setBannerVisible(false);
+        }, duration);
+      });
+    };
     const extractPageKey = (path: string): string => {
       const trimmed = path.replace(`/${currentLocale}`, "").replace(/^\/+/, "");
       if (trimmed === "") {
@@ -67,14 +80,15 @@ const ClientLayout = ({
       return pageKey;
     };
     const pageKey = extractPageKey(pathname);
-    setPageName(t(pageKey));
+    renderTranslate(pageKey, currentLocale).then((message) => {
+      setPageName(message);
+    });
     if (bannerVisible) {
       showBanner(bannerMessage, bannerType);
     }
   }, [
     pathname,
     currentLocale,
-    t,
     bannerMessage,
     bannerType,
     bannerVisible,
@@ -95,6 +109,7 @@ const ClientLayout = ({
       />
       {bannerDisplayed && (
         <BannerDescriptor
+          currentLocale={currentLocale}
           message={bannerMessage}
           bannerType={bannerType}
           active={bannerVisible}

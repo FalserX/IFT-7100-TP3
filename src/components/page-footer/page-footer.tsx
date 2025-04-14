@@ -29,10 +29,10 @@ const PageFooter = ({ siteName }: PageFooterProps) => {
             alt={`${t("client-layout.btn-framework-logo-alt")}`}
             width={64}
             height={64}
-            className="mr-2"
+            className="mr-2 hover:underline"
           />
           <span
-            className={`absolute bottom-full right-0 transform -translate-x-12 translate-y-4 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+            className={`absolute bottom-full w-fit right-4 transform translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
           >{`${t("client-layout.btn-framework-logo-tooltip")}`}</span>
         </Link>
       </div>
