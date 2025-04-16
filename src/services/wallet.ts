@@ -1,7 +1,6 @@
 "use client";
 import { Eip1193Provider, BrowserProvider, JsonRpcSigner } from "ethers";
 import { WalletResponse } from "../types/wallet-response";
-import { ErrorCodes } from "../utils/errors";
 
 let provider: BrowserProvider | undefined;
 let signer: JsonRpcSigner | undefined;
@@ -13,6 +12,40 @@ declare global {
   }
 }
 
+enum ErrorType {
+  NO_PROVIDERS = 0,
+  CONNECT_ERROR = 1,
+  INSUFFICIENT_FUNDS = 2,
+  WALLET_ADDRESS_ERROR = 3,
+  WALLET_SIGNER_ERROR = 4,
+  WALLET_NO_WINDOW_ERROR = 5,
+}
+
+const ErrorCodes = (errorType: ErrorType): string => {
+  switch (errorType) {
+    case ErrorType.CONNECT_ERROR: {
+      return "errors.connect-error";
+    }
+    case ErrorType.INSUFFICIENT_FUNDS: {
+      return "errors.insufficient_funds";
+    }
+    case ErrorType.NO_PROVIDERS: {
+      return "errors.no-providers";
+    }
+    case ErrorType.WALLET_ADDRESS_ERROR: {
+      return "errors.wallet-address-error";
+    }
+    case ErrorType.WALLET_NO_WINDOW_ERROR: {
+      return "errors.wallet-no-window-error";
+    }
+    case ErrorType.WALLET_SIGNER_ERROR: {
+      return "errors.wallet-signer-error";
+    }
+    default:
+      return "";
+  }
+};
+
 export const initWallet = async (): Promise<WalletResponse | undefined> => {
   if (window.ethereum) {
     provider = new BrowserProvider(window.ethereum);
@@ -23,10 +56,10 @@ export const initWallet = async (): Promise<WalletResponse | undefined> => {
   return;
 };
 
-export const disconnect = async () => {
+export const disconnect = async (): Promise<string | undefined> => {
   if (!window.ethereum) {
-    console.error(ErrorCodes.CONNECT_ERROR);
-    return;
+    console.error(ErrorCodes(ErrorType.WALLET_NO_WINDOW_ERROR));
+    return ErrorCodes(ErrorType.WALLET_NO_WINDOW_ERROR);
   }
   provider = undefined;
   address = undefined;
@@ -34,34 +67,36 @@ export const disconnect = async () => {
   return undefined;
 };
 
-export const getProvider = (): BrowserProvider | undefined => {
+export const getProvider = (): BrowserProvider | string | undefined => {
   if (!provider) {
-    console.error(ErrorCodes.NO_PROVIDERS);
-    return;
+    console.error(ErrorCodes(ErrorType.NO_PROVIDERS));
+    return ErrorCodes(ErrorType.NO_PROVIDERS);
   }
   return provider;
 };
 
 export const getAddress = (): string | undefined => {
   if (!address) {
-    console.error(ErrorCodes.WALLET_ADDRESS_ERROR);
-    return;
+    console.error(ErrorCodes(ErrorType.WALLET_ADDRESS_ERROR));
+    return ErrorCodes(ErrorType.WALLET_ADDRESS_ERROR);
   }
   return address;
 };
 
-export const getSigner = (): JsonRpcSigner | undefined => {
+export const getSigner = (): JsonRpcSigner | string | undefined => {
   if (!signer) {
-    console.error(ErrorCodes.WALLET_SIGNER_ERROR);
-    return;
+    console.error(ErrorCodes(ErrorType.WALLET_SIGNER_ERROR));
+    return ErrorCodes(ErrorType.WALLET_SIGNER_ERROR);
   }
   return signer;
 };
 
-export const connect = async (): Promise<WalletResponse | undefined> => {
+export const connect = async (): Promise<
+  WalletResponse | string | undefined
+> => {
   if (!window.ethereum) {
-    console.error(ErrorCodes.CONNECT_ERROR);
-    return;
+    console.error(ErrorCodes(ErrorType.CONNECT_ERROR));
+    return ErrorCodes(ErrorType.CONNECT_ERROR);
   }
   provider = new BrowserProvider(window.ethereum);
   signer = await provider.getSigner();

@@ -1,5 +1,80 @@
 {
-  "Home": {
-    "test": "test"
+  "client-layout": {
+    "Home": {
+      "title": "Accueil"
+    },
+    "basket": {
+      "title": "Votre panier"
+    },
+    "commands": {
+      "title": "Commandes"
+    },
+    "btn-framework-logo-alt": "Logo NextJS",
+    "framework-message": "Créé avec ",
+    "btn-framework-logo-tooltip": "Ouvrir le site web de NextJS",
+    "btn-logo-alt": "Logo du site",
+    "btn-logo-tooltip": "Retourner à l'accueil"
+  },
+  "language-switch": {
+    "btn-alt": "Icône des langues",
+    "btn-tooltip": "Switch to English"
+  },
+  "banner": {
+    "btn-error-alt": "Icône de bannière d'erreur",
+    "btn-confirm-alt": "Icône de bannière de confirmation",
+    "btn-info-alt": "Icône de bannière d'information",
+    "btn-warning-alt": "Icône de bannière d'avertissement"
+  },
+  "errors": {
+    "no-providers": "Aucun portefeuille ou de fournisseur de portefeuille détecté ou trouvé.",
+    "connect-error": "Une erreur est survenue lors de la connexion au fournisseur de portefeuille.",
+    "insufficient-funds": "La commande a été décliné. Le portefeuille ne dispose pas suffisamment de fonds pour compléter la requête.",
+    "wallet-address-error": "Une erreur est survenue lors de la récupération de l'adresse du portefeuille.",
+    "wallet-signer-error": "Une erreur est survenue lors de la récupération du signataire (propriétaire) du portefeuille.",
+    "wallet-no-window-error": "Aucun portefeuille trouvé. S.V.P. Essayez d'installer un fournisseur de portefeuille. Exemple Metamask.",
+    "ask-admin-error": "Veuillez communiquer avec l'administrateur du site. Fournissez le message d'erreur suivant: "
+  },
+  "account-dropdown": {
+    "btn-alt": "Icône du compte",
+    "btn-label": "Votre compte",
+    "btn-tooltip": "Menu du compte usager",
+    "account-dropdown-item": {
+      "wallet": {
+        "btn-label": "Votre portefeuille : ",
+        "btn-alt": "Icône du portefeuille",
+        "btn-tooltip": "Votre adresse de compte du portefeuille"
+      },
+      "basket": {
+        "btn-label": "Panier ",
+        "btn-full-alt": "Icône du panier plein",
+        "btn-empty-alt": "Icône du panier vide",
+        "btn-empty-tooltip": "Votre panier est vide",
+        "btn-full-tooltip": "Votre panier contient des fruits"
+      },
+      "commands": {
+        "btn-label": "Commandes",
+        "btn-alt": "Icône des commandes",
+        "btn-tooltip": "Vos précédentes commandes"
+      },
+      "logout": {
+        "btn-label": "Déconnexion ",
+        "btn-alt": "Icône de déconnexion",
+        "btn-tooltip": "Se déconnecter"
+      },
+      "login": {
+        "btn-label": "Connexion ",
+        "btn-alt": "Icône de connexion",
+        "btn-tooltip": "Se connecter"
+      }
+    }
+  },
+  "home": {
+    "content": "Test"
+  },
+  "basket": {
+    "content": "Votre panier"
+  },
+  "commands": {
+    "content": "Vos commandes"
   }
 }

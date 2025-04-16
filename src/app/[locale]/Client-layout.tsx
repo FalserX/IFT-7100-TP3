@@ -8,6 +8,7 @@ import BannerDescriptor, {
 } from "@/components/banner-descriptor/banner-descriptor";
 import PageFooter from "@/components/page-footer/page-footer";
 import { Metadata } from "next";
+import { useTranslations } from "next-intl";
 
 const ClientLayout = ({
   metadata,
@@ -20,6 +21,7 @@ const ClientLayout = ({
     () => (metadata?.title ? (metadata.title as string) : ""),
     [metadata]
   );
+  const [isClient, setIsClient] = useState<boolean>(true);
   const [pageName, setPageName] = useState<string>("");
   const pathname = usePathname();
   const [walletResponse, setWalletResponse] = useState<
@@ -30,7 +32,7 @@ const ClientLayout = ({
   const [bannerType, setBannerType] = useState<BannerType>(BannerType.INFO);
   const [bannerDisplayed, setBannerDisplayed] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-
+  const t = useTranslations();
   const showBanner = (
     message: string,
     type: BannerType = BannerType.INFO,
@@ -53,20 +55,33 @@ const ClientLayout = ({
   const currentLocale = params?.locale ? (params.locale as string) : "fr";
 
   useEffect(() => {
-    const formatPageName = (path: string): string => {
-      if (path === `/${currentLocale}`) return "Accueil";
-      return (
-        path.replace(`/${currentLocale}`, "").charAt(0).toUpperCase() +
-        path.slice(2)
-      );
-    };
+    setIsClient(true);
+    const extractPageKey = (path: string): string => {
+      const trimmed = path.replace(`/${currentLocale}`, "").replace(/^\/+/, "");
+      if (trimmed === "") {
+        return "client-layout.Home.title";
+      }
 
-    setPageName(formatPageName(pathname));
+      const parts = trimmed.split("/");
+      const pageKey = `client-layout.${parts.join(".")}.title`;
+      return pageKey;
+    };
+    const pageKey = extractPageKey(pathname);
+    setPageName(t(pageKey));
     if (bannerVisible) {
       showBanner(bannerMessage, bannerType);
     }
-  }, [bannerMessage, bannerType, bannerVisible, pathname, currentLocale]);
+  }, [
+    pathname,
+    currentLocale,
+    t,
+    bannerMessage,
+    bannerType,
+    bannerVisible,
+    setIsClient,
+  ]);
 
+  if (!isClient) return null;
   return (
     <>
       <PageHeader
@@ -94,12 +109,8 @@ const ClientLayout = ({
         />
       )}
       {children}
-      <PageFooter
-        name="Conçu avec "
-        frontEndAltImage="NextJS logo"
-        frontEndSrcImage="/nextLogo.svg"
-        siteName={siteName}
-      />
+
+      <PageFooter siteName={siteName} />
     </>
   );
 };
