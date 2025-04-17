@@ -5,7 +5,6 @@ import { connect, isConnected, disconnect } from "../../services/wallet";
 import { WalletResponse } from "@/types/wallet-response";
 import { ErrorCodes } from "@/utils/errors";
 import Image from "next/image";
-import AccountDropdownMenu from "../account-dropdown-menu/account-dropdown-menu";
 
 type InfoAccountProps = {
   walletResponse: WalletResponse | undefined;
