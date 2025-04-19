@@ -7,7 +7,7 @@ import ProfileSection from "./profile-section";
 import CoordonatesSection from "./coordonates-section";
 import { useRef } from "react";
 import { useParams } from "next/navigation";
-import { updateUser } from "@/libs/user-service";
+import { deleteUser, updateUser } from "@/libs/user-service";
 
 const defaultProfilePicture: ImageType = {
   id: uuid(),
@@ -28,6 +28,19 @@ const GeneralTab = ({
   const coordinatesRef = useRef<{ getData: () => any }>(null);
   const params = useParams();
 
+  const handleDelete = async () => {
+    const userId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+    if (!userId) {
+      console.error("errors.users.user.profile.data.access");
+      return;
+    }
+    try {
+      await deleteUser(userId);
+      window.location.reload();
+    } catch (error) {
+      throw new Error(`API Error: ${error}`);
+    }
+  };
   const handleCancel = async () => {
     window.location.reload();
   };
@@ -100,7 +113,7 @@ const GeneralTab = ({
       <div className="flex flex-row border-2 gap-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
         <div className="flex flex-row gap-64 ml-6 m-2">
           <button
-            onClick={() => {}}
+            onClick={handleDelete}
             className="border rounded-2xl border-red-600 p-2 text-black shadow-2xl cursor-pointer hover:bg-red-600 hover:text-white"
           >
             {"users.user.profile.delete.btn.label"}

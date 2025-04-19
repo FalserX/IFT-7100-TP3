@@ -12,3 +12,14 @@ export const updateUser = async (userId: string, data: any) => {
     return await res.json();
   }
 };
+
+export const deleteUser = async (userId: string) => {
+  const res = await fetch(`/api/users/${userId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error(`API Error: ${res.status}`);
+  else if (res.status !== 204) {
+    return await res.json();
+  }
+};
