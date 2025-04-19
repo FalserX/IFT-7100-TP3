@@ -1,0 +1,34 @@
+[
+  {
+    "id": "28f855ca-538d-4d76-a5a5-93036c8d88f5",
+    "deleted": false,
+    "rating": 0,
+    "ratingList": [],
+    "profilePicture": {
+      "alt": "users.user.profile.img",
+      "url": "/User.svg",
+      "id": "794e5aaa-ced6-409b-ab1d-0666b35e7b18",
+      "createdAt": "2025-04-18T04:36:45.373Z",
+      "updatedAt": "2025-04-18T04:36:45.373Z"
+    },
+    "wallet": "0xE311Ba88458402cE26b4bEbd6ABFb90f632B9d20",
+    "role": [
+      0
+    ],
+    "pseudo": "Neoralus",
+    "createdAt": "2025-04-18T04:36:45.373Z",
+    "updatedAt": "2025-04-19T04:21:43.263Z",
+    "fullName": "Gildbbff",
+    "email": "",
+    "description": "",
+    "addressBuyer": {
+      "city": "",
+      "country": "",
+      "no": 1,
+      "road": "",
+      "state": "",
+      "zip": ""
+    },
+    "phoneBuyer": ""
+  }
+]

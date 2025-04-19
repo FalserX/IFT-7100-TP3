@@ -35,8 +35,8 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "src/services/wallet.ts",
-    "src/utils/errors.ts",
-    "src/utils/dates.ts"
+    "src/libs/errors.ts",
+    "src/libs/dates.ts"
   ],
   "exclude": [
     "node_modules"

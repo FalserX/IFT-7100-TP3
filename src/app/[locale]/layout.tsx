@@ -1,40 +1,24 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
-import ClientLayout from "./Client-layout";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import { notFound } from "next/navigation";
 import { ReactNode } from "react";
+import { LocaleContextProvider } from "@/contexts/locale-context";
+import ClientProvider from "../client-provider";
 
 type Props = {
   children: ReactNode;
-  params: { locale: string };
 };
 
 export const metadata: Metadata = {
   title: "Fruits inc",
 };
 
-export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "fr" }];
-}
-
-export default async function LocaleLayout({ children, params }: Props) {
-  const currentLocale = params.locale || "fr";
-  let messages;
-
-  try {
-    messages = await getMessages({ locale: currentLocale });
-  } catch (error) {
-    console.log(error);
-    notFound();
-  }
+export default function Layout({ children }: Props) {
   return (
-    <html lang={currentLocale}>
+    <html lang="en">
       <body>
-        <NextIntlClientProvider locale={currentLocale} messages={messages}>
-          <ClientLayout metadata={metadata}>{children}</ClientLayout>
-        </NextIntlClientProvider>
+        <LocaleContextProvider>
+          <ClientProvider metadata={metadata}>{children}</ClientProvider>
+        </LocaleContextProvider>
       </body>
     </html>
   );

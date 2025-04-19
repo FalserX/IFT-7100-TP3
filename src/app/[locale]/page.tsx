@@ -1,34 +1,13 @@
 "use client";
-import Loading from "@/components/loading/loading";
-import renderTranslate from "@/utils/renderTranslate";
-import { useEffect, useState } from "react";
-
-export default function Home({
-  currentLocale,
-  loadingFallback = (
-    <Loading
-      className="w-[1rem] h-[1rem] my-1 items-center"
-      spinnerColor="#FFF"
-    />
-  ),
-}: {
-  currentLocale: string;
-  loadingFallback: React.ReactNode;
-}) {
-  const [homeTitle, setHomeTitle] = useState<string>();
-  useEffect(() => {
-    const getFetchTranslation = async (key: string, locale: string) => {
-      return await renderTranslate(key, locale);
-    };
-    getFetchTranslation("home.title", currentLocale).then((res) =>
-      setHomeTitle(res)
-    );
-  }, [currentLocale]);
+import { useLocale } from "@/contexts/locale-context";
+export default function Home({ children }: { children: React.ReactNode }) {
+  const { getLocaleString } = useLocale();
   return (
     <main className="min-h-[85vh] bg-white rounded-2xl">
       <h2 className="items-center text-black">
-        {homeTitle ? homeTitle : loadingFallback}
+        {getLocaleString("home.title-header")}
       </h2>
+      {children}
     </main>
   );
 }

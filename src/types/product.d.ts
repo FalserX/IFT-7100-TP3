@@ -1,10 +1,22 @@
 import { v4 as uuid } from "uuid";
-import { Merchant } from "./merchant";
+import { ImageType } from "../types/image";
 
-export type Product = {
-  id: uuid;
-  cost: number;
+export type ProductListType = {
+  id: typeof uuid;
+  products: ProductType[];
+  total: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type ProductType = {
+  id: typeof uuid;
   name: string;
   qty: number;
-  merchant: Merchant;
+  description?: string;
+  price: number;
+  stock: number;
+  image?: ImageType;
+  createdAt: Date;
+  updatedAt: Date;
 };
