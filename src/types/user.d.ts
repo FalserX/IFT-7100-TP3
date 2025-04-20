@@ -31,7 +31,7 @@ type UserType = {
   deleted?: boolean;
   wallet: string;
   profilePicture?: ImageType;
-  role?: number[];
+  role?: RoleType[];
   pseudo: string;
   fullName?: string;
   productsList?: ProductListType;
@@ -100,7 +100,6 @@ export type UserPublicView = Pick<
   UserType,
   | "id"
   | "preferredLanguage"
-  | "wallet"
   | "deleted"
   | "pseudo"
   | "productsList"
@@ -116,7 +115,6 @@ export type UserPublicView = Pick<
 export type UserOwnerView = Pick<
   UserType,
   | "id"
-  | "deleted"
   | "wallet"
   | "preferredLanguage"
   | "profilePicture"

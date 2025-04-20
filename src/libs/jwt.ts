@@ -2,7 +2,6 @@
 import { TokenAPIMessage } from "@/types/auth";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
 
 export async function signToken(
   payload: object,
@@ -20,7 +19,7 @@ export async function signToken(
     jwt_result = jwt.sign(payload, SECRET, {
       expiresIn: expiresin as jwt.SignOptions["expiresIn"],
     });
-    if (!jwt_result.isWellFormed() || jwt_result.length === 0) {
+    if (!jwt_result || jwt_result.length === 0) {
       return {
         success: false,
         error: { errorStatus: 500, errorMessage: "errors.jwt.secret.empty" },
@@ -68,6 +67,26 @@ export async function verifyToken(
     }
     return { success: true, data: decoded };
   } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      return {
+        success: false,
+        error: {
+          errorStatus: 401,
+          errorMessage: "errors.jwt.secret.expired",
+          errorConsole: String(err),
+        },
+      };
+    }
+    if (err instanceof jwt.JsonWebTokenError) {
+      return {
+        success: false,
+        error: {
+          errorMessage: "errors.jwt.secret.error",
+          errorStatus: 400,
+          errorConsole: String(err),
+        },
+      };
+    }
     return {
       success: false,
       error: {
@@ -80,18 +99,16 @@ export async function verifyToken(
 }
 
 export async function getTokenFromRequest(
-  request: NextRequest,
   SECRET: jwt.Secret
 ): Promise<TokenAPIMessage> {
   try {
-    const cookieStore = cookies();
-    const token = (await cookieStore).get("auth_token")?.value;
+    const token = (await cookies()).get("auth_token")?.value;
     if (!token) {
       return {
         success: false,
         error: {
-          errorStatus: 404,
-          errorMessage: "errors.jwt.secret.token.found",
+          errorStatus: 401,
+          errorMessage: "errors.error.invalid.token",
         },
       };
     }
@@ -104,11 +121,12 @@ export async function getTokenFromRequest(
       | string;
     return { success: true, data: decodedData };
   } catch (err) {
+    console.log(err);
     return {
       success: false,
       error: {
         errorStatus: 500,
-        errorMessage: "errors.jwt.secret.token.",
+        errorMessage: "errors.jwt.secret.token.error",
         errorConsole: String(err),
       },
     };

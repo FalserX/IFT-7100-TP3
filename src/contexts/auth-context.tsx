@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const res = await fetch("/api/logout", {
         method: "POST",
+        credentials: "include",
       });
       if (res.ok) {
         await refreshUser();
@@ -47,7 +48,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
   const refreshUser = async () => {
     try {
-      const res = await fetch(`/api/users/me`);
+      const res = await fetch(`/api/users/me`, {
+        method: "GET",
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         setUser(data.data);

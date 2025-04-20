@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { verifyMessage } from "ethers";
 import { signToken } from "../../../../libs/jwt";
 import { getUserByAddress, createUserIfNotExist } from "../../../../libs/user";
@@ -17,7 +16,7 @@ export async function POST(request: Request) {
     const recoverAddress = verifyMessage(message, signature);
     if (recoverAddress.toLowerCase() !== address.toLowerCase()) {
       return NextResponse.json(
-        { error: "errors.wallet.invalid" },
+        { error: "errors.auth.wallet.invalid" },
         { status: 401 }
       );
     }
@@ -52,16 +51,23 @@ export async function POST(request: Request) {
       );
     }
     const tokenData: string | JwtPayload | undefined = token.data;
-    (await cookies()).set("auth_token", tokenData as string, {
+    const response = NextResponse.json(
+      {
+        message: "auth.access.connected",
+      },
+      { status: 200 }
+    );
+
+    response.cookies.set("auth_token", tokenData as string, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 60 * 60, // 1 heure
       sameSite: "lax",
     });
-    return NextResponse.json({ message: token }, { status: 200 });
+    return response;
   } catch (err) {
     console.error("Error in /api/auth/verify: ", err);
-    return NextResponse.json({ error: "Verification error" }, { status: 500 });
+    return NextResponse.json({ error: "errors.auth.verify" }, { status: 500 });
   }
 }

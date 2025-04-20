@@ -20,7 +20,6 @@ export async function GET(
       allowedRoles: [RoleType.ADMIN],
       resourceOwnerId: params.id,
     });
-
   if (errorResponse) {
     return NextResponse.json(
       { error: errorResponse.errorMessage },

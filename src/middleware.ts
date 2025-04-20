@@ -16,16 +16,23 @@ interface UserAuthenticationResult {
 export async function getAuthUser(
   request: NextRequest
 ): Promise<UserAuthenticationResult> {
+  const { locale } = request.nextUrl;
   const token = request.cookies.get("auth_token")?.value;
   if (!token) {
+    const notFoundURL = request.nextUrl.clone();
+    notFoundURL.pathname = `/${locale}/unauthorized`;
+    NextResponse.redirect(notFoundURL);
     return {
       requester: null,
-      error: { errorMessage: "errors.access.connected", errorStatus: 400 },
+      error: { errorMessage: "errors.access.forbidden", errorStatus: 401 },
     };
   }
   try {
     const requester = await verifyToken(token, process.env.APP_KEY || "");
     if (!requester.success) {
+      const notFoundURL = request.nextUrl.clone();
+      notFoundURL.pathname = `/${locale}/unauthorized`;
+      NextResponse.redirect(notFoundURL);
       return {
         requester: null,
         error: { errorMessage: "errors.access.forbidden", errorStatus: 401 },
@@ -34,6 +41,9 @@ export async function getAuthUser(
     const requesterData = requester.data ?? null;
     return { requester: requesterData };
   } catch (err) {
+    const notFoundURL = request.nextUrl.clone();
+    notFoundURL.pathname = `/${locale}/unauthorized`;
+    NextResponse.redirect(notFoundURL);
     return {
       requester: null,
       error: {
@@ -56,14 +66,36 @@ const accessControl = [
     allowOwner: true,
     resourceIdIndex: 1,
   },
+  {
+    path: /^\/app\/users\/([^/]+)$/,
+    roles: [RoleType.ADMIN],
+    allowOwner: true,
+    resourceIdIndex: 2,
+  },
 ];
 
 export async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+  const { pathname, locale } = request.nextUrl;
   const response = intlMiddleware(request);
 
+  const publicPaths = [
+    "/login",
+    "/api",
+    "/_next",
+    "/favicon.ico",
+    "/en",
+    "/fr",
+    "/",
+  ];
+  if (publicPaths.some((path) => pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
   const rule = accessControl.find(({ path }) => path.test(pathname));
-  if (!rule) return response;
+  if (!rule) {
+    const notFoundURL = request.nextUrl.clone();
+    notFoundURL.pathname = `/${locale}/notFound`;
+    return NextResponse.redirect(notFoundURL);
+  }
 
   const { requester, error } = await getAuthUser(request);
 
@@ -73,10 +105,9 @@ export async function middleware(request: NextRequest) {
     typeof requester !== "object" ||
     !("role" in requester)
   ) {
-    return NextResponse.json(
-      { error: error?.errorMessage },
-      { status: error?.errorStatus }
-    );
+    const unauthorizedURL = request.nextUrl.clone();
+    unauthorizedURL.pathname = `/${locale}/unauthorized`;
+    return NextResponse.redirect(unauthorizedURL);
   }
   const roles: RoleType[] = requester?.role;
   const hasRequiredRole = roles.some((role) => rule.roles.includes(role));
@@ -92,10 +123,9 @@ export async function middleware(request: NextRequest) {
     rule.allowOwner && resourceOwnerId && requester?.id === resourceOwnerId;
 
   if (!hasRequiredRole && !isOwner) {
-    return NextResponse.json(
-      { error: "errors.access.forbidden" },
-      { status: 403 }
-    );
+    const unauthorizedURL = request.nextUrl.clone();
+    unauthorizedURL.pathname = `/${locale}/unauthorized`;
+    return NextResponse.redirect(unauthorizedURL);
   }
   return response;
 }

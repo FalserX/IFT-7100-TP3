@@ -1,5 +1,5 @@
 "use client";
-import ProfilePage from "@/components/user/profile/profile-page";
+import ProfilePage from "@/components/user/profile/profile-page/profile-page";
 import { useParams } from "next/navigation";
 
 export default function UserPage() {

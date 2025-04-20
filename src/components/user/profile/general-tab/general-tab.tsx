@@ -1,13 +1,13 @@
 "use client";
-import { AddressType, UserAdminView, UserOwnerView } from "@/types/user";
+import { UserAdminView, UserOwnerView } from "@/types/user";
 import ProfileTabHeader from "../profile-tab-header";
 import { v4 as uuid } from "uuid";
 import { ImageType } from "@/types/image";
 import ProfileSection from "./profile-section";
 import CoordonatesSection from "./coordonates-section";
 import { useRef } from "react";
-import { useParams } from "next/navigation";
-import { deleteUser, updateUser } from "@/libs/user-service";
+import SaveCancelDeleteSection from "../save-cancel-delete-section";
+import { RoleType } from "@/types/role";
 
 const defaultProfilePicture: ImageType = {
   id: uuid(),
@@ -19,69 +19,21 @@ const defaultProfilePicture: ImageType = {
 
 const GeneralTab = ({
   profile,
+  currentUser,
 }: {
   profile: UserAdminView | UserOwnerView;
+  currentUser: { id: string; role: RoleType[] };
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const profileRef = useRef<{ getData: () => any }>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const coordinatesRef = useRef<{ getData: () => any }>(null);
-  const params = useParams();
-
-  const handleDelete = async () => {
-    const userId = Array.isArray(params?.id) ? params.id[0] : params?.id;
-    if (!userId) {
-      console.error("errors.users.user.profile.data.access");
-      return;
-    }
-    try {
-      await deleteUser(userId);
-      window.location.reload();
-    } catch (error) {
-      throw new Error(`API Error: ${error}`);
-    }
-  };
-  const handleCancel = async () => {
-    window.location.reload();
-  };
-  const handleSave = async () => {
-    const profileData = profileRef.current?.getData();
-    const coordinatesData = coordinatesRef.current?.getData();
-    const userId = Array.isArray(params?.id) ? params.id[0] : params?.id;
-
-    if (!userId || !profileData || !coordinatesData) {
-      console.error("errors.users.user.profile.data.access");
-      return;
-    }
-    const newCoordinatesDataAddress: AddressType = {
-      city: coordinatesData.city,
-      country: coordinatesData.country,
-      no: coordinatesData.no,
-      road: coordinatesData.road,
-      state: coordinatesData.state,
-      zip: coordinatesData.zipCode,
-      apptNo: coordinatesData.appNo,
-    };
-    const newPhoneBuyer: string = coordinatesData.phone;
-
-    const coordinates: {
-      addressBuyer: AddressType | undefined;
-      phoneBuyer: string | undefined;
-    } = {
-      addressBuyer: newCoordinatesDataAddress,
-      phoneBuyer: newPhoneBuyer,
-    };
-    const fullData = {
-      ...profileData,
-      ...coordinates,
-    };
-    try {
-      await updateUser(userId, fullData);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const coordinatesBuyerRef = useRef<{ getData: () => any }>(null);
+  const isOwner = currentUser.id === profile.id;
+  if (currentUser.role.includes(RoleType.ADMIN) && !isOwner) {
+    profile = profile as UserAdminView;
+  } else if (isOwner) {
+    profile = profile as UserOwnerView;
+  }
   return (
     <div>
       <ProfileTabHeader
@@ -90,48 +42,48 @@ const GeneralTab = ({
       />
       <ProfileSection
         ref={profileRef}
-        deleted={profile.deleted ?? false}
+        isOwner={isOwner}
+        roles={currentUser.role}
+        deleted={
+          !isOwner && currentUser.role.includes(RoleType.ADMIN)
+            ? (profile as UserAdminView).deleted
+            : undefined
+        }
         profilePicture={profile.profilePicture ?? defaultProfilePicture}
         description={profile.description ?? ""}
         email={profile.email ?? ""}
         pseudo={profile.pseudo}
         fullName={profile.fullName ?? ""}
         rating={profile.rating ?? 3.5}
-        wallet={profile.wallet ?? ""}
+        wallet={
+          currentUser.id === profile.id
+            ? (profile as UserOwnerView).wallet
+            : undefined
+        }
       />
-      <CoordonatesSection
-        ref={coordinatesRef}
-        appNo={profile.addressBuyer?.apptNo ?? undefined}
-        city={profile.addressBuyer?.city ?? ""}
-        country={profile.addressBuyer?.country ?? ""}
-        no={profile.addressBuyer?.no ?? 1}
-        phone={profile.phoneBuyer ?? ""}
-        road={profile.addressBuyer?.road ?? ""}
-        state={profile.addressBuyer?.state ?? ""}
-        zipCode={profile.addressBuyer?.zip ?? ""}
+      {isOwner && (
+        <CoordonatesSection
+          roles={currentUser.role}
+          isOwner={isOwner}
+          profile={profile}
+          ref={coordinatesBuyerRef}
+          appNo={profile.addressBuyer?.apptNo ?? undefined}
+          city={profile.addressBuyer?.city ?? ""}
+          country={profile.addressBuyer?.country ?? ""}
+          no={profile.addressBuyer?.no ?? 1}
+          phone={profile.phoneBuyer ?? ""}
+          road={profile.addressBuyer?.road ?? ""}
+          state={profile.addressBuyer?.state ?? ""}
+          zipCode={profile.addressBuyer?.zip ?? ""}
+        />
+      )}
+      <SaveCancelDeleteSection
+        userId={profile.id}
+        roles={currentUser.role}
+        isOwner={isOwner}
+        profileDataFn={() => profileRef.current?.getData()}
+        coordinatesBuyerDatafn={() => coordinatesBuyerRef.current?.getData()}
       />
-      <div className="flex flex-row border-2 gap-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
-        <div className="flex flex-row gap-64 ml-6 m-2">
-          <button
-            onClick={handleDelete}
-            className="border rounded-2xl border-red-600 p-2 text-black shadow-2xl cursor-pointer hover:bg-red-600 hover:text-white"
-          >
-            {"users.user.profile.delete.btn.label"}
-          </button>
-          <button
-            onClick={handleCancel}
-            className="border rounded-2xl border-blue-500 p-2 text-black shadow-2xl cursor-pointer hover:bg-gray-300"
-          >
-            {"users.user.profile.cancel.btn.label"}
-          </button>
-          <button
-            onClick={handleSave}
-            className="border rounded-2xl p-2 bg-blue-500 border-white text-white cursor-pointer shadow-2xl hover:bg-blue-700 hover:text-white"
-          >
-            {"users.user.profile.save.btn.label"}
-          </button>
-        </div>
-      </div>
     </div>
   );
 };

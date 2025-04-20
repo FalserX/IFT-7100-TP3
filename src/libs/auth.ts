@@ -97,6 +97,7 @@ export async function login() {
 export async function logout() {
   await fetch("/api/auth/logout", {
     method: "GET",
+    credentials: "include",
   });
 
   localStorage.setItem("session-logout", "true");

@@ -1,9 +1,9 @@
 import { getUserById } from "../../../../libs/user";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getTokenFromRequest } from "../../../../libs/jwt";
 
-export async function GET(request: NextRequest) {
-  const token = await getTokenFromRequest(request, process.env.APP_KEY || "");
+export async function GET() {
+  const token = await getTokenFromRequest(process.env.APP_KEY || "");
   if (!token.success) {
     return NextResponse.json(
       { error: token.error.errorMessage },
