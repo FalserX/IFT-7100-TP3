@@ -1,22 +1,23 @@
-import { v4 as uuid } from "uuid";
 import { ImageType } from "../types/image";
-
-export type ProductListType = {
-  id: typeof uuid;
-  products: ProductType[];
-  total: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import { APIErrorMessage } from "./auth";
 
 export type ProductType = {
-  id: typeof uuid;
+  id: string;
   name: string;
-  qty: number;
+  delete: boolean;
+  qty?: number;
   description?: string;
   price: number;
   stock: number;
   image?: ImageType;
-  createdAt: Date;
-  updatedAt: Date;
+  userId?: string;
+  createdAt: string;
+  updatedAt: string;
 };
+export type ReadProductsResult = {
+  success: boolean;
+  data?: ProductType[];
+  error?: APIErrorMessage;
+};
+
+export type WriteProductsResult = Pick<ReadProductsResult, "success" | "error">;

@@ -186,7 +186,7 @@ export async function softDeleteUser(id: string): Promise<WriteUsersResult> {
   try {
     const users = await readUsers(true);
     if (!users.success) {
-      return users;
+      throw new Error("API Error: No possible to delete user");
     }
     const usersData: UserType[] = users.data as UserType[];
 

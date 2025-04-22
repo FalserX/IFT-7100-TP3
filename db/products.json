@@ -1,0 +1,24 @@
+[
+  {
+    "id": "b15bbf00-2732-41fe-a959-50bed30f9738",
+    "name": "ergg",
+    "description": "egesges",
+    "price": 0.05,
+    "stock": 3,
+    "delete": false,
+    "createdAt": "2025-04-21T23:08:03.849Z",
+    "userId": "87572035-afc1-425f-888b-f7e3c04ae369",
+    "updatedAt": "2025-04-21T23:08:03.849Z"
+  },
+  {
+    "id": "601d5cde-2409-43c8-ae1f-8bdccc49c740",
+    "name": "fdgfdsg",
+    "description": "egrge",
+    "price": 0.05,
+    "stock": 1,
+    "delete": false,
+    "createdAt": "2025-04-22T00:14:30.665Z",
+    "userId": "87572035-afc1-425f-888b-f7e3c04ae369",
+    "updatedAt": "2025-04-22T00:14:31.890Z"
+  }
+]

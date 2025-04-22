@@ -22,9 +22,7 @@ export const updatePutUser = async (
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error(`API Error: ${res.status}`);
-  else if (res.status !== 204) {
-    return await res.json();
-  }
+  return;
 };
 export const updatePatchUser = async (
   userId: string,
@@ -45,9 +43,7 @@ export const updatePatchUser = async (
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error(`API Error: ${res.status}`);
-  else if (res.status !== 204) {
-    return await res.json();
-  }
+  return;
 };
 
 export const deleteUser = async (userId: string, originUrl: string) => {
@@ -62,9 +58,7 @@ export const deleteUser = async (userId: string, originUrl: string) => {
     },
   });
   if (!res.ok) throw new Error(`API Error: ${res.status}`);
-  else if (res.status !== 204) {
-    return await res.json();
-  }
+  return;
 };
 
 export const getCurrentUser = async (): Promise<TokenAPIMessage> => {

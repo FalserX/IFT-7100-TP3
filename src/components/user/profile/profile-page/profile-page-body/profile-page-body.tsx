@@ -3,9 +3,11 @@ import ProfilePageBodyNav from "./profile-page-body-nav";
 import { AnimatePresence, motion } from "framer-motion";
 import GeneralTab from "../../general-tab/general-tab";
 import MerchantTab from "../../merchant-tab/merchant-tab";
-import OrdersTab from "../../orders-tab";
-import UsersTab from "../../users-tab";
 import { RoleType } from "@/types/role";
+import CartTab from "../../cart-tab/cart-tab";
+import OrderTab from "../../order-tab/order-tab";
+import ProductTab from "../../product-tab/product-tab";
+import UserTab from "../../user-tab/user-tab";
 
 const tabComponentMap: Record<
   string,
@@ -20,8 +22,18 @@ const tabComponentMap: Record<
   merchant: ({ profile, currentUser }) => (
     <MerchantTab profile={profile} currentUser={currentUser} />
   ),
-  orders: OrdersTab,
-  users: UsersTab,
+  cart: ({ profile, currentUser }) => (
+    <CartTab profile={profile} currentUser={currentUser} />
+  ),
+  orders: ({ profile, currentUser }) => (
+    <OrderTab profile={profile} currentUser={currentUser} />
+  ),
+  products: ({ profile, currentUser }) => (
+    <ProductTab profile={profile} currentUser={currentUser} />
+  ),
+  users: ({ profile, currentUser }) => (
+    <UserTab profile={profile} currentUser={currentUser} />
+  ),
 };
 
 const ProfilePageBody = ({
