@@ -1,36 +1,15 @@
-import { ProfilePageBodyTabsType } from "@/types/profile";
-import { RoleType } from "@/types/role";
-
-const ProfilePageBodyTabs: ProfilePageBodyTabsType[] = [
+const ProfilePageBodyTabs: { id: string; label: string }[] = [
   {
     id: "general",
     label: "users.user.profile.general.btn.label",
-    role: [RoleType.BUYER, RoleType.VENDOR, RoleType.ADMIN],
-  },
-  {
-    id: "merchant",
-    label: "users.user.profile.merchant.btn.label",
-    role: [RoleType.VENDOR, RoleType.BUYER, RoleType.ADMIN],
-  },
-  {
-    id: "cart",
-    label: "users.user.profile.cart",
-    role: [RoleType.BUYER, RoleType.ADMIN, RoleType.VENDOR],
-  },
-  {
-    id: "orders",
-    label: "users.user.profile.orders",
-    role: [RoleType.BUYER, RoleType.ADMIN, RoleType.VENDOR],
   },
   {
     id: "products",
     label: "users.user.profile.products.btn.label",
-    role: [RoleType.VENDOR, RoleType.ADMIN],
   },
   {
-    id: "users",
-    label: "users.user.profile.users.btn.label",
-    role: [RoleType.ADMIN],
+    id: "cart",
+    label: "users.user.profile.cart.btn.label",
   },
 ];
 

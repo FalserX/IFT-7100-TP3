@@ -1,43 +1,66 @@
 import LoadingSpinner from "@/components/loading-spinner/loading-spinner";
+import { useContractContext } from "@/contexts/contract-context";
+import { useToast } from "@/contexts/toast-notification-context";
+import { useWallet } from "@/contexts/wallet-context";
+import { NotifType } from "@/types/notification";
 import { ProductType } from "@/types/product";
-import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { useCallback, useEffect, useState } from "react";
 
 const ProductListSection = ({
-  userId,
-  onEdit,
-  onDelete,
+  setSelectedProductId,
 }: {
-  userId: string;
-  onEdit: (product: ProductType) => void;
-  onDelete: (productId: string) => void;
+  setSelectedProductId: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
+  const { contract } = useContractContext();
+  const { address } = useWallet();
   const [productList, setProductList] = useState<ProductType[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showToast } = useToast();
 
-  useEffect(() => {
-    const fetchProducts = async (userId: string) => {
+  const onEdit = (productId: string) => {
+    setSelectedProductId(productId);
+  };
+  const onDelete = useCallback(
+    async (productId: string) => {
       try {
-        const response = await fetch(`/api/products?userId=${userId}`);
-        if (!response.ok) {
-          throw new Error(`Cannot get the products for the user`);
-        }
-        const products = await response.json();
-        const productsData: { success: boolean; data: ProductType[] } =
-          products.data;
-        if (!productsData.success) {
-          setProductList([]);
+        if (!contract) {
+          showToast(
+            `errors.users.user.products.product.contract.error`,
+            NotifType.ERROR
+          );
           return;
         }
-        setProductList(productsData.data);
+        const tx = await contract.removeProduct(productId);
+        await tx.wait();
+        showToast(`users.user.products.product.delete.success`);
       } catch (err) {
-        console.error(`API Error: ${err}`);
+        showToast(
+          `errors.users.user.products.product.delete.error ${err}`,
+          NotifType.ERROR
+        );
+      }
+    },
+    [contract, showToast]
+  );
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        if (!contract || !address) {
+          return;
+        }
+        const onChainProducts = await contract.getAllProductsByOwner(address);
+        setProductList(onChainProducts);
+      } catch (err) {
+        console.log(`API Error: ${err}`);
         setProductList([]);
       } finally {
         setIsLoading(false);
       }
     };
-    if (userId) fetchProducts(userId);
-  }, [userId]);
+    fetchProducts();
+  }, [contract, address]);
 
   return (
     <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
@@ -71,11 +94,11 @@ const ProductListSection = ({
               </thead>
               <tbody>
                 {productList.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
+                  <tr key={product.id} className="hover:bg-gray-500">
                     <td className="border border-gray-300 px-4 py-2 text-center rounded-2xl">
                       <button
-                        onClick={() => onEdit(product)}
-                        className="text-blue-500 hover:underline mr-2"
+                        onClick={() => onEdit(product.id)}
+                        className="text-blue-500 hover:underline mr-2 hover:cursor-pointer"
                       >
                         ✏️
                       </button>
@@ -93,7 +116,7 @@ const ProductListSection = ({
                       {product.description}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-right">
-                      {product.price}
+                      {ethers.formatEther(product.price)}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-right">
                       {product.stock}

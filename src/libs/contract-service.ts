@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS || "";
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
 
 export const getContract = async () => {
   try {

@@ -1,89 +1,128 @@
 "use client";
-import { UserAdminView, UserOwnerView } from "@/types/user";
+import { useWallet } from "@/contexts/wallet-context";
 import ProfileTabHeader from "../profile-tab-header";
-import { v4 as uuid } from "uuid";
-import { ImageType } from "@/types/image";
-import ProfileSection from "./profile-section";
-import CoordonatesSection from "./coordonates-section";
-import { useRef } from "react";
-import SaveCancelDeleteSection from "../save-cancel-delete-section";
-import { RoleType } from "@/types/role";
 
-const defaultProfilePicture: ImageType = {
-  id: uuid(),
-  alt: "users.user.profile.general.profile.picture.alt",
-  url: "/User.svg",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
+import { useState, useEffect } from "react";
+import { Network } from "ethers";
 
-const GeneralTab = ({
-  profile,
-  currentUser,
-}: {
-  profile: UserAdminView | UserOwnerView;
-  currentUser: { id: string; role: RoleType[] };
-}) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const profileRef = useRef<{ getData: () => any }>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const coordinatesBuyerRef = useRef<{ getData: () => any }>(null);
-  const isOwner = currentUser.id === profile.id;
-  if (currentUser.role.includes(RoleType.ADMIN) && !isOwner) {
-    profile = profile as UserAdminView;
-  } else if (isOwner) {
-    profile = profile as UserOwnerView;
-  }
+const GeneralTab = () => {
+  const { address, getBalance, getNetwork } = useWallet();
+  const [balance, setBalance] = useState<number>(0);
+  const [network, setNetwork] = useState<Network | string>("");
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const fetchedBalance = await getBalance();
+      setBalance(fetchedBalance);
+    };
+    fetchBalance();
+  }, [getBalance]);
+  useEffect(() => {
+    const fetchNetwork = async () => {
+      const fetchedNetwork = await getNetwork();
+      setNetwork(fetchedNetwork);
+    };
+    fetchNetwork();
+  }, [getNetwork]);
   return (
     <div>
       <ProfileTabHeader
         activeBanner={false}
         headerTitle="users.user.profile.general.title"
       />
-      <ProfileSection
-        ref={profileRef}
-        isOwner={isOwner}
-        roles={currentUser.role}
-        deleted={
-          !isOwner && currentUser.role.includes(RoleType.ADMIN)
-            ? (profile as UserAdminView).deleted
-            : undefined
-        }
-        profilePicture={profile.profilePicture ?? defaultProfilePicture}
-        description={profile.description ?? ""}
-        email={profile.email ?? ""}
-        pseudo={profile.pseudo}
-        fullName={profile.fullName ?? ""}
-        rating={profile.rating ?? 3.5}
-        wallet={
-          currentUser.id === profile.id
-            ? (profile as UserOwnerView).wallet
-            : undefined
-        }
-      />
-      {isOwner && (
-        <CoordonatesSection
-          roles={currentUser.role}
-          isOwner={isOwner}
-          profile={profile}
-          ref={coordinatesBuyerRef}
-          appNo={profile.addressBuyer?.apptNo ?? undefined}
-          city={profile.addressBuyer?.city ?? ""}
-          country={profile.addressBuyer?.country ?? ""}
-          no={profile.addressBuyer?.no ?? 1}
-          phone={profile.phoneBuyer ?? ""}
-          road={profile.addressBuyer?.road ?? ""}
-          state={profile.addressBuyer?.state ?? ""}
-          zipCode={profile.addressBuyer?.zip ?? ""}
-        />
-      )}
-      <SaveCancelDeleteSection
-        userId={profile.id}
-        roles={currentUser.role}
-        isOwner={isOwner}
-        profileDataFn={() => profileRef.current?.getData()}
-        coordinatesBuyerDatafn={() => coordinatesBuyerRef.current?.getData()}
-      />
+      <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
+        <div className="flex flex-row gap-2">
+          <table
+            id="profileSectionGeneric"
+            className="w-[40vw] text-black m-2 table-auto border-spacing-4"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  <label htmlFor="address">
+                    {"users.user.profile.address"}
+                  </label>
+                </td>
+                <td className="px-4 py-2">
+                  <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    disabled={true}
+                    value={address ?? ""}
+                    onChange={() => {}}
+                    className={`rounded-xl border pl-2 border-gray-500 bg-gray-300 w-[500px]`}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label htmlFor="balance">
+                    {"users.user.profile.balance"}
+                  </label>
+                </td>
+                <td className="px-4 py-2">
+                  <input
+                    type="text"
+                    name="balance"
+                    id="balance"
+                    disabled={true}
+                    value={balance.toString() ?? ""}
+                    onChange={() => {}}
+                    className={`rounded-xl border pl-2 border-gray-500 bg-gray-300 w-[500px]`}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label htmlFor="networkName">
+                    {"users.user.profile.network.name"}
+                  </label>
+                </td>
+                <td className="px-4 py-2">
+                  <input
+                    type="text"
+                    name="networkName"
+                    id="networkName"
+                    disabled={true}
+                    value={
+                      typeof network === "string"
+                        ? ""
+                        : (network as Network).name == "unknown"
+                        ? "local"
+                        : (network as Network).name
+                    }
+                    onChange={() => {}}
+                    className={`rounded-xl border pl-2 border-gray-500 bg-gray-300 w-[500px]`}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label htmlFor="networkChainId">
+                    {"users.user.profile.network.chainId"}
+                  </label>
+                </td>
+                <td className="px-4 py-2">
+                  <input
+                    type="text"
+                    name="networkChainId"
+                    id="networkChainId"
+                    disabled={true}
+                    value={
+                      typeof network === "string"
+                        ? ""
+                        : String((network as Network).chainId)
+                    }
+                    onChange={() => {}}
+                    className={`rounded-xl border pl-2 border-gray-500 bg-gray-300 w-[500px]`}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

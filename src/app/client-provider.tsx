@@ -7,7 +7,9 @@ import { AppUIContextProvider } from "@/contexts/app-ui-context";
 import { ReactNode } from "react";
 import ClientLayout from "./[locale]/Client-layout";
 import { Metadata } from "next";
-import { CartContextProvider } from "@/contexts/cart-context";
+import { ContractProvider } from "@/contexts/contract-context";
+import { CartProvider } from "@/contexts/cart-context";
+import { ToastNotificationProvider } from "@/contexts/toast-notification-context";
 
 export default function ClientProvider({
   children,
@@ -17,15 +19,19 @@ export default function ClientProvider({
   metadata: Metadata;
 }) {
   return (
-    <CartContextProvider>
-      <AppUIContextProvider
-        LoadingSpinner={LoadingSpinner}
-        PopupDialog={PopupDialog}
-        ToastNotif={ToastNotification}
-        siteName={metadata.title ? (metadata.title as string) : ""}
-      >
-        <ClientLayout metadata={metadata}>{children}</ClientLayout>
-      </AppUIContextProvider>
-    </CartContextProvider>
+    <AppUIContextProvider
+      LoadingSpinner={LoadingSpinner}
+      PopupDialog={PopupDialog}
+      ToastNotif={ToastNotification}
+      siteName={metadata.title ? (metadata.title as string) : ""}
+    >
+      <ContractProvider>
+        <ToastNotificationProvider>
+          <CartProvider>
+            <ClientLayout metadata={metadata}>{children}</ClientLayout>
+          </CartProvider>
+        </ToastNotificationProvider>
+      </ContractProvider>
+    </AppUIContextProvider>
   );
 }

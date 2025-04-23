@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import PageFooter from "@/components/page-footer/page-footer";
 import React from "react";
-import { WalletResponseProvider } from "@/contexts/wallet-context";
 import { useLocale } from "@/contexts/locale-context";
 import { useAppUI } from "@/contexts/app-ui-context";
 import { Metadata } from "next";
-import { PopupType } from "@/types/popup";
-import { AuthProvider } from "@/contexts/auth-context";
-import { login } from "@/libs/auth";
-import { NavigationGuardProvider } from "@/contexts/navigation-guard-context";
+import PageHeader from "@/components/page-header/page-header";
+import { ToastNotificationProvider } from "@/contexts/toast-notification-context";
+import { ContractProvider } from "@/contexts/contract-context";
+import { WalletProvider } from "@/contexts/wallet-context";
+import { CartProvider } from "@/contexts/cart-context";
 
 const ClientLayout = ({
   children,
@@ -24,15 +24,7 @@ const ClientLayout = ({
   const pathname = usePathname();
 
   const { currentLocale, getLocaleString } = useLocale();
-  const {
-    setPageName,
-    popupAction,
-    popupActive,
-    PopupDialog,
-    popupMessage,
-    popupTitle,
-    popupType,
-  } = useAppUI();
+  const { setPageName } = useAppUI();
   useEffect(() => {
     setIsClient(true);
     const extractPageKey = (path: string): string => {
@@ -59,45 +51,19 @@ const ClientLayout = ({
   if (!isClient) return null;
   return (
     <div className={`bg-gray-700`}>
-      <AuthProvider>
-        <NavigationGuardProvider>
-          <WalletResponseProvider>
-            {PopupDialog && (
-              <PopupDialog
-                popupType={popupType ?? PopupType.INFO}
-                popupAction={popupAction}
-                popupActive={popupActive}
-                popupMessage={popupMessage}
-                popupTitle={popupTitle}
-              />
-            )}
-            {children}
-            <button
-              onClick={() => {
-                login();
-              }}
-            >
-              Login
-            </button>
-            <PageFooter />
-          </WalletResponseProvider>
-        </NavigationGuardProvider>
-      </AuthProvider>
+      <ToastNotificationProvider>
+        <WalletProvider>
+          <ContractProvider>
+            <CartProvider>
+              <PageHeader />
+              {children}
+              <PageFooter />
+            </CartProvider>
+          </ContractProvider>
+        </WalletProvider>
+      </ToastNotificationProvider>
     </div>
   );
 };
 
 export default ClientLayout;
-
-/*
-
-const LogoutButton =() => {
-const {refreshUser, logout} = useAuth();
-const handleLogout = async () =>{
-  await logout();
-  await refreshUser();
-}
-  return <button onclick={handleLogout}>Logout</button>
-}
-
-*/

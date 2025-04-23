@@ -1,28 +1,20 @@
-import { createContext, useContext, useState } from "react";
-import { Cart } from "@/types/cart";
+"use client";
+import { createContext, useContext, ReactNode } from "react";
+import useCartLogic from "@/hooks/useCart";
 
-const cartContext = createContext<{
-  cart: Cart;
-  setCart: React.Dispatch<React.SetStateAction<Cart>>;
-} | null>(null);
+const CartContext = createContext<ReturnType<typeof useCartLogic> | null>(null);
 
-export const CartContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const [cart, setCart] = useState<Cart>({ products: [] });
+export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const cartLogic = useCartLogic();
   return (
-    <cartContext.Provider value={{ cart, setCart }}>
-      {children}
-    </cartContext.Provider>
+    <CartContext.Provider value={cartLogic}>{children}</CartContext.Provider>
   );
 };
 
 export const useCart = () => {
-  const context = useContext(cartContext);
+  const context = useContext(CartContext);
   if (!context) {
-    throw new Error("usecart must be used within cartProvider");
+    throw new Error("useCart must be used inside CartProvider");
   }
   return context;
 };

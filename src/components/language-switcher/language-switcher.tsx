@@ -46,7 +46,7 @@ const LanguageSwitcher = ({
     <div
       className={`flex ${
         tooltip ? "relative group" : ""
-      } border-2 border-white min-w-fit min-h-12 rounded-xl px-3 py-1 items-center hover:underline hover:font-bold`}
+      } border-2 border-white min-w-fit min-h-12 rounded-xl px-3 py-1 items-center hover:underline hover:font-bold hover:cursor-pointer`}
     >
       <Image
         alt={imgAlt && getLocaleString(imgAlt)}

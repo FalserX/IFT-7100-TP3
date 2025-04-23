@@ -8,8 +8,8 @@
     ],
     "allowJs": true,
     "noEmit": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
@@ -27,7 +27,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "./dist"
   },
   "include": [
     "**/*.tsx",
@@ -36,7 +37,10 @@
     ".next/types/**/*.ts",
     "src/services/wallet.ts",
     "src/libs/errors.ts",
-    "src/libs/dates.ts"
+    "src/libs/dates.ts",
+    "./hardhat.config.ts",
+    "test/**/*.ts",
+    "scripts/**/*.ts"
   ],
   "exclude": [
     "node_modules"

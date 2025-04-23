@@ -1,71 +1,127 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import { WalletResponse, WalletErrorType } from "@/types/wallet-response";
-import { BrowserProvider, JsonRpcSigner } from "ethers";
+"use client";
 
-const WalletResponseContext = createContext<
-  | {
-      walletResponse: WalletResponse | undefined;
-      setWalletResponse: React.Dispatch<
-        React.SetStateAction<WalletResponse | undefined>
-      >;
-      walletProvider: BrowserProvider | undefined;
-      setWalletProvider: React.Dispatch<
-        React.SetStateAction<BrowserProvider | undefined>
-      >;
-      walletSigner: JsonRpcSigner | undefined;
-      setWalletSigner: React.Dispatch<
-        React.SetStateAction<JsonRpcSigner | undefined>
-      >;
-      walletAddress: string | undefined;
-      setWalletAddress: React.Dispatch<
-        React.SetStateAction<string | undefined>
-      >;
-      walletErrorType: WalletErrorType | undefined;
-      setWalletErrorType: React.Dispatch<
-        React.SetStateAction<WalletErrorType | undefined>
-      >;
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { ethers, JsonRpcSigner, Network } from "ethers";
+
+type WalletContextType = {
+  address: string | null;
+  signer: JsonRpcSigner | null;
+  provider: ethers.BrowserProvider | null;
+  loading: boolean;
+  connectMetaMask: () => Promise<void>;
+  getBalance: () => Promise<number>;
+  getNetwork: () => Promise<Network | string>;
+  logout: () => void;
+};
+
+const WalletContext = createContext<WalletContextType>({
+  address: null,
+  signer: null,
+  provider: null,
+  loading: true,
+  connectMetaMask: async () => {
+    console.log("connectMetaMask function is not initialized");
+  },
+  getBalance: async () => {
+    console.log("getBalance function is not initialized");
+    return 0;
+  },
+  getNetwork: async () => {
+    console.log("getNetwork function is not initialized");
+    return "";
+  },
+  logout: async () => {
+    console.log("logout function is not intialized");
+  },
+});
+
+export const WalletProvider = ({ children }: { children: ReactNode }) => {
+  const [address, setAddress] = useState<string | null>(null);
+  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
+  const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
+  const [loading, setLoading] = useState(true);
+  const logout = () => {
+    setAddress(null);
+    setSigner(null);
+    localStorage.setItem("wallet-disconnect", "true");
+  };
+
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (
+        typeof window.ethereum !== "undefined" &&
+        !localStorage.getItem("wallet-disconnect")
+      ) {
+        const ethProvider = new ethers.BrowserProvider(window.ethereum);
+        const ethSigner = await ethProvider.getSigner();
+        const address = await ethSigner.getAddress();
+        setProvider(ethProvider);
+        setSigner(ethSigner);
+        setAddress(address);
+      }
+      setLoading(false);
+    };
+    connectWallet();
+  }, []);
+  const connectMetaMask = async (): Promise<void> => {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const ethProvider = new ethers.BrowserProvider(window.ethereum);
+        const ethSigner = await ethProvider.getSigner();
+        const address = await ethSigner.getAddress();
+        setProvider(ethProvider);
+        setSigner(ethSigner);
+        setAddress(address);
+        if (localStorage.getItem("wallet-disconnect")) {
+          localStorage.removeItem("wallet-disconnect");
+        }
+      } catch (error) {
+        throw new Error(`Error connecting to MetaMask : ${error}`);
+      }
+    } else {
+      throw new Error("MetaMask not installed");
     }
-  | undefined
->(undefined);
-export const WalletResponseProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  const [walletResponse, setWalletResponse] = useState<
-    WalletResponse | undefined
-  >();
-  const [walletAddress, setWalletAddress] = useState<string | undefined>();
-  const [walletProvider, setWalletProvider] = useState<
-    BrowserProvider | undefined
-  >();
-  const [walletErrorType, setWalletErrorType] = useState<
-    WalletErrorType | undefined
-  >();
-  const [walletSigner, setWalletSigner] = useState<JsonRpcSigner | undefined>();
+  };
+
+  const getBalance = async (): Promise<number> => {
+    try {
+      const balance = await provider?.getBalance(address ?? "");
+
+      const result = parseFloat(ethers.formatEther(balance ?? 0));
+      return !isNaN(result) ? result : 0;
+    } catch (err) {
+      throw new Error(`Error connecting to MetaMask: ${err}`);
+    }
+  };
+
+  const getNetwork = async (): Promise<Network | string> => {
+    try {
+      const network = await provider?.getNetwork();
+      return network ?? "";
+    } catch (err) {
+      throw new Error(`Error connecting to MetaMask: ${err}`);
+    }
+  };
+  const value = {
+    address,
+    signer,
+    provider,
+    loading,
+    connectMetaMask,
+    getBalance,
+    getNetwork,
+    logout,
+  };
   return (
-    <WalletResponseContext.Provider
-      value={{
-        walletAddress,
-        setWalletAddress,
-        walletErrorType,
-        setWalletErrorType,
-        walletProvider,
-        setWalletProvider,
-        walletResponse,
-        setWalletResponse,
-        walletSigner,
-        setWalletSigner,
-      }}
-    >
-      {children}
-    </WalletResponseContext.Provider>
+    <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
   );
 };
-export const useWalletResponse = () => {
-  const context = useContext(WalletResponseContext);
-  if (!context) {
-    throw new Error("useWalletResponse must be within WalletResponseProvider");
-  }
-  return context;
-};
+
+export const useWallet = () => useContext(WalletContext);

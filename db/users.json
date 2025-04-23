@@ -19,12 +19,14 @@
     ],
     "pseudo": "Megadozor",
     "createdAt": "2025-04-19T22:21:41.775Z",
-    "updatedAt": "2025-04-21T18:02:21.674Z",
+    "updatedAt": "2025-04-22T01:49:50.134Z",
     "isOwner": true,
     "fullName": "",
     "email": "",
     "description": "",
-    "addressBuyer": {
+    "addressBuyer": {},
+    "phoneBuyer": "",
+    "addressMerchant": {
       "city": "",
       "country": "",
       "no": 1,
@@ -32,13 +34,6 @@
       "state": "",
       "zip": ""
     },
-    "phoneBuyer": "",
-    "addressMerchant": {},
-    "phoneMerchant": "",
-    "roles": [
-      0,
-      2,
-      1
-    ]
+    "phoneMerchant": ""
   }
 ]
