@@ -2,24 +2,24 @@ import React, { useState } from "react";
 import { Star } from "lucide-react";
 
 type Props = {
-  initialRating: number;
   className?: string;
   outOf?: number;
+  value: number;
   onRatingChange?: (rating: number) => void;
   allowHalf?: boolean;
   disabled?: boolean;
 };
 
 const InteractiveStarRating = ({
-  initialRating,
   className,
+  value,
   outOf = 5,
   onRatingChange,
   allowHalf = true,
   disabled = false,
 }: Props) => {
   const [hovered, setHovered] = useState<number | null>(null);
-  const [rating, setRating] = useState<number>(initialRating);
+  const [rating, setRating] = useState<number>(value);
 
   const handleMouseEnter = (index: number) => {
     if (!disabled) setHovered(index);

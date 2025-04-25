@@ -1,17 +1,17 @@
 import ProfileTabHeader from "../profile-tab-header";
-import CartSection from "./cart-section";
+import OrderSection from "./order-section";
 import { useLocale } from "@/contexts/locale-context";
-const CartTab = () => {
+const OrderTab = () => {
   const { getLocaleString } = useLocale();
   return (
     <div>
       <ProfileTabHeader
         activeBanner={false}
-        headerTitle={getLocaleString("users.user.profile.cart.title")}
+        headerTitle={getLocaleString("users.user.profile.order.title")}
       />
-      <CartSection />
+      <OrderSection />
     </div>
   );
 };
 
-export default CartTab;
+export default OrderTab;

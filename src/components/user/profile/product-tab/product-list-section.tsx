@@ -6,12 +6,14 @@ import { NotifType } from "@/types/notification";
 import { ProductType } from "@/types/product";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
+import { useLocale } from "@/contexts/locale-context";
 
 const ProductListSection = ({
   setSelectedProductId,
 }: {
   setSelectedProductId: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
+  const { getLocaleString } = useLocale();
   const { contract } = useContractContext();
   const { address } = useWallet();
   const [productList, setProductList] = useState<ProductType[]>();
@@ -65,7 +67,7 @@ const ProductListSection = ({
   return (
     <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
       <h3 className="mt-2 ml-2 font-bold text-gray-600">
-        {"users.user.profile.product.list.title"}
+        {getLocaleString("users.user.profile.product.list.title")}
       </h3>
       <div className="flex flex-row m-2">
         {isLoading ? (
@@ -76,19 +78,21 @@ const ProductListSection = ({
               <thead className="bg-gray-200">
                 <tr>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    {"users.user.profile.product.list.actions"}
+                    {getLocaleString("users.user.profile.product.list.actions")}
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    {"users.user.profile.product.list.name"}
+                    {getLocaleString("users.user.profile.product.list.name")}
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    {"users.user.profile.product.list.description"}
+                    {getLocaleString(
+                      "users.user.profile.product.list.description"
+                    )}
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    {"users.user.profile.product.list.price ETH"}
+                    {`${"users.user.profile.product.list.price"} ETH`}
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    {"users.user.profile.product.list.stock"}
+                    {getLocaleString("users.user.profile.product.list.stock")}
                   </th>
                 </tr>
               </thead>
@@ -119,7 +123,7 @@ const ProductListSection = ({
                       {ethers.formatEther(product.price)}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-right">
-                      {product.stock}
+                      {Number(ethers.formatUnits(product.stock, 0))}
                     </td>
                   </tr>
                 ))}
@@ -128,7 +132,7 @@ const ProductListSection = ({
           </div>
         ) : (
           <span className="text-gray-500 text-sm italic mt-4">
-            {"errors.users.user.profile.products.found"}
+            {getLocaleString("errors.users.user.profile.products.found")}
           </span>
         )}
       </div>

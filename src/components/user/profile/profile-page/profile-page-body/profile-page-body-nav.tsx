@@ -1,18 +1,4 @@
-const ProfilePageBodyTabs: { id: string; label: string }[] = [
-  {
-    id: "general",
-    label: "users.user.profile.general.btn.label",
-  },
-  {
-    id: "products",
-    label: "users.user.profile.products.btn.label",
-  },
-  {
-    id: "cart",
-    label: "users.user.profile.cart.btn.label",
-  },
-];
-
+import { useLocale } from "@/contexts/locale-context";
 const ProfilePageBodyNav = ({
   activeTab,
   setActiveTab,
@@ -20,6 +6,27 @@ const ProfilePageBodyNav = ({
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const { getLocaleString } = useLocale();
+
+  const ProfilePageBodyTabs: { id: string; label: string }[] = [
+    {
+      id: "general",
+      label: `${getLocaleString("users.user.profile.general.title")}`,
+    },
+    {
+      id: "products",
+      label: `${getLocaleString("users.user.profile.product.list.title")}`,
+    },
+    {
+      id: "cart",
+      label: `${getLocaleString("users.user.profile.cart.title")}`,
+    },
+    {
+      id: "order",
+      label: `${getLocaleString("users.user.profile.order.title")}`,
+    },
+  ];
+
   return (
     <aside className="w-1/4 bg-white rounded-xl shadow p-4 space-y-2">
       {ProfilePageBodyTabs.map((tab) => {

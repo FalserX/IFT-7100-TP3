@@ -83,10 +83,10 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
           localStorage.removeItem("wallet-disconnect");
         }
       } catch (error) {
-        throw new Error(`Error connecting to MetaMask : ${error}`);
+        console.log(`Error connecting to MetaMask : ${error}`);
       }
     } else {
-      throw new Error("MetaMask not installed");
+      console.log("MetaMask not installed");
     }
   };
 
@@ -97,7 +97,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       const result = parseFloat(ethers.formatEther(balance ?? 0));
       return !isNaN(result) ? result : 0;
     } catch (err) {
-      throw new Error(`Error connecting to MetaMask: ${err}`);
+      console.log(`Error connecting to MetaMask: ${err}`);
+      return 0;
     }
   };
 
@@ -106,7 +107,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       const network = await provider?.getNetwork();
       return network ?? "";
     } catch (err) {
-      throw new Error(`Error connecting to MetaMask: ${err}`);
+      console.log(`Error connecting to MetaMask: ${err}`);
+      return "";
     }
   };
   const value = {

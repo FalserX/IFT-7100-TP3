@@ -3,11 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import GeneralTab from "../../general-tab/general-tab";
 import CartTab from "../../cart-tab/cart-tab";
 import ProductTab from "../../product-tab/product-tab";
-
+import OrderTab from "../../order-tab/order-tab";
+import { useLocale } from "@/contexts/locale-context";
 const tabComponentMap: Record<string, React.FC> = {
   general: () => <GeneralTab />,
   cart: () => <CartTab />,
   products: () => <ProductTab />,
+  order: () => <OrderTab />,
 };
 
 const ProfilePageBody = ({
@@ -17,6 +19,7 @@ const ProfilePageBody = ({
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const { getLocaleString } = useLocale();
   return (
     <>
       <ProfilePageBodyNav activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -35,7 +38,7 @@ const ProfilePageBody = ({
               if (!Component)
                 return (
                   <p className="text-black">
-                    {"errors.users.user.profile.tab"}
+                    {getLocaleString("errors.users.user.profile.tab")}
                   </p>
                 );
               return <Component />;

@@ -1,11 +1,13 @@
 "use client";
 import { useWallet } from "@/contexts/wallet-context";
+import { useLocale } from "@/contexts/locale-context";
 import ProfileTabHeader from "../profile-tab-header";
 
 import { useState, useEffect } from "react";
 import { Network } from "ethers";
 
 const GeneralTab = () => {
+  const { getLocaleString } = useLocale();
   const { address, getBalance, getNetwork } = useWallet();
   const [balance, setBalance] = useState<number>(0);
   const [network, setNetwork] = useState<Network | string>("");
@@ -28,7 +30,7 @@ const GeneralTab = () => {
     <div>
       <ProfileTabHeader
         activeBanner={false}
-        headerTitle="users.user.profile.general.title"
+        headerTitle={getLocaleString("users.user.profile.general.title")}
       />
       <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
         <div className="flex flex-row gap-2">
@@ -40,7 +42,7 @@ const GeneralTab = () => {
               <tr>
                 <td>
                   <label htmlFor="address">
-                    {"users.user.profile.address"}
+                    {getLocaleString("users.user.profile.general.address")}
                   </label>
                 </td>
                 <td className="px-4 py-2">
@@ -58,7 +60,7 @@ const GeneralTab = () => {
               <tr>
                 <td>
                   <label htmlFor="balance">
-                    {"users.user.profile.balance"}
+                    {getLocaleString("users.user.profile.general.balance")}
                   </label>
                 </td>
                 <td className="px-4 py-2">
@@ -76,7 +78,7 @@ const GeneralTab = () => {
               <tr>
                 <td>
                   <label htmlFor="networkName">
-                    {"users.user.profile.network.name"}
+                    {getLocaleString("users.user.profile.general.network.name")}
                   </label>
                 </td>
                 <td className="px-4 py-2">
@@ -100,7 +102,9 @@ const GeneralTab = () => {
               <tr>
                 <td>
                   <label htmlFor="networkChainId">
-                    {"users.user.profile.network.chainId"}
+                    {getLocaleString(
+                      "users.user.profile.general.network.chainId"
+                    )}
                   </label>
                 </td>
                 <td className="px-4 py-2">

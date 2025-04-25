@@ -19,6 +19,7 @@ type LocaleContextType = {
   translations: Translations;
   getLocaleString: (key: string) => string;
   getSupportedLanguages: () => string[];
+  getPathForLocale: (pathname: string, newLocale: string) => string;
 };
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
@@ -42,57 +43,58 @@ export const LocaleContextProvider = ({
   children: ReactNode;
 }) => {
   const supportedLanguages = useMemo<string[]>(() => {
-    return ["fr", "en"] as const;
+    return ["fr", "en"];
   }, []);
+  const pathname = usePathname();
+  const localeFromPath = pathname.split("/")[1];
+  const validLocale = supportedLanguages.includes(localeFromPath)
+    ? localeFromPath
+    : "en";
 
-  const [currentLocale, setCurrentLocale] = useState<string>("fr");
+  const [currentLocale, setCurrentLocale] = useState<string>(validLocale);
   const [translations, setTranslations] = useState<Translations>({});
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-  const getSupportedLanguages = (): string[] => {
-    return supportedLanguages;
+
+  useEffect(() => {
+    if (validLocale !== currentLocale) {
+      setCurrentLocale(validLocale);
+    }
+  }, [validLocale, currentLocale]);
+
+  useEffect(() => {
+    loadTranslations(currentLocale).then(setTranslations);
+  }, [currentLocale]);
+
+  const getSupportedLanguages = () => supportedLanguages;
+
+  const getPathForLocale = (pathname: string, newLocale: string): string => {
+    const segments = pathname.split("/");
+    if (supportedLanguages.includes(segments[1])) {
+      segments[1] = newLocale;
+    } else {
+      segments.splice(1, 0, newLocale);
+    }
+    return segments.join("/") || "/";
   };
+
   const getLocaleString = (key: string): string => {
     try {
-      const keys: string[] = key.split(".");
-      let result: Translations | string = translations;
+      const keys = key.split(".");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let result: any = translations;
       for (const k of keys) {
-        if (typeof result === "object" && result !== null && k in result) {
-          result = (result as Translations)[k];
+        if (result && typeof result === "object" && k in result) {
+          result = result[k];
         } else {
           return key;
         }
       }
       return typeof result === "string" ? result : key;
     } catch (err) {
-      console.error(err);
-      return "";
+      console.log(err);
+      return key;
     }
   };
-  const pathname = usePathname();
 
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      const loadedTranslations = await loadTranslations(currentLocale);
-      setTranslations(loadedTranslations);
-    };
-    fetchTranslations();
-  }, [currentLocale]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMounted(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    const localeFromPath = pathname.split("/")[1];
-    if (supportedLanguages.includes(localeFromPath)) {
-      setCurrentLocale(localeFromPath);
-    }
-  }, [pathname, supportedLanguages]);
-  if (!isMounted) {
-    return;
-  }
   return (
     <LocaleContext.Provider
       value={{
@@ -101,6 +103,7 @@ export const LocaleContextProvider = ({
         translations,
         getLocaleString,
         getSupportedLanguages,
+        getPathForLocale,
       }}
     >
       {children}

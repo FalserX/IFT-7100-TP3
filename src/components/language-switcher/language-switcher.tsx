@@ -1,7 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { JSX } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/contexts/locale-context";
 import { useAppUI } from "@/contexts/app-ui-context";
@@ -19,27 +18,22 @@ const LanguageSwitcher = ({
 }: LanguageSwitcherProps): JSX.Element => {
   const {
     currentLocale,
-    setCurrentLocale,
     getLocaleString,
     getSupportedLanguages,
+    getPathForLocale,
   } = useLocale();
   const { LoadingSpinner } = useAppUI();
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = usePathname();
 
   const otherLocales = getSupportedLanguages().filter(
     (loc) => loc !== currentLocale
   );
 
-  const getPathForLocale = (newLocale: string) => {
-    if (!pathname.startsWith(`/${currentLocale}`)) return `/${newLocale}`;
-    return pathname.replace(`/${currentLocale}`, `${newLocale}`);
-  };
-
   const handleLocaleChange = (newLocale: string) => {
     if (newLocale !== currentLocale) {
-      setCurrentLocale(newLocale);
-      router.push(getPathForLocale(newLocale));
+      const newPath = getPathForLocale(pathname, newLocale);
+      router.push(newPath);
     }
   };
   return (
@@ -57,7 +51,7 @@ const LanguageSwitcher = ({
       />
       {tooltip ? (
         <span
-          className={`absolute top-full left-0 w-full transform translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+          className={`absolute top-full max-w-md left-0 break-words transform translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
         >
           {getLocaleString(tooltip)}
         </span>
@@ -66,13 +60,11 @@ const LanguageSwitcher = ({
       )}
       {otherLocales.map((locale) => {
         return (
-          <Link
-            href={getPathForLocale(locale)}
-            key={locale}
-            onClick={() => handleLocaleChange(locale)}
-          >
-            {locale[0].toUpperCase() + locale[1]}
-          </Link>
+          <div key={locale}>
+            <button onClick={() => handleLocaleChange(locale)}>
+              {locale === "fr" ? "Français" : "English"}
+            </button>
+          </div>
         );
       })}
     </div>

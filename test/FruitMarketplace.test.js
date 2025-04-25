@@ -57,7 +57,7 @@ describe("Marketplace", function () {
 
     it("Test 6: permet de mettre à jour les détails d’un fruit", async function () {
         await contract.addProduct("Cerises", "ceci est une cerise", ethers.parseEther("0.8"), 8);
-        await contract.updateProduct(1, "Cerises", "ceci est une cerise", ethers.parseEther("1.2"), 12);
+        await contract.updateProduct(1, "Cerises", "ceci est une cerise", ethers.parseEther("1.2"), 12, true);
         const product = await contract.getProduct(1);
         expect(product.price).to.equal(ethers.parseEther("1.2"));
         expect(product.stock).to.equal(12);

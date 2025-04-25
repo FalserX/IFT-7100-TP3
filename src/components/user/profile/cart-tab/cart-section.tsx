@@ -1,6 +1,7 @@
 import { useCart } from "@/contexts/cart-context";
 import React from "react";
 import Image from "next/image";
+import { useLocale } from "@/contexts/locale-context";
 const CartSection = () => {
   const {
     cart,
@@ -13,10 +14,11 @@ const CartSection = () => {
     setQty,
     buyCart,
   } = useCart();
+  const { getLocaleString } = useLocale();
   return (
     <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
       <h3 className="mt-2 ml-2 font-bold text-gray-600">
-        {"users.user.cart.title"}
+        {getLocaleString("users.user.cart.title")}
       </h3>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 justify-end items-end align-middle mr-3">
@@ -29,7 +31,7 @@ const CartSection = () => {
             } mr-2`}
             onClick={clearCart}
           >
-            {"users.user.cart.clear"}
+            {getLocaleString("users.user.cart.clear")}
           </button>
           <button
             disabled={cart.length === 0}
@@ -40,7 +42,7 @@ const CartSection = () => {
             }`}
             onClick={cart.length > 0 ? buyCart : () => {}}
           >
-            {"users.user.cart.buy"}
+            {getLocaleString("users.user.cart.buy")}
           </button>
           <span className="font-semibold text-gray-700">
             <span>{`users.user.cart.total : `}</span>
@@ -50,7 +52,7 @@ const CartSection = () => {
         <div>
           {cart.length === 0 ? (
             <span className="text-gray-500 text-sm italic mt-4 ml-5 mb-2">
-              {"users.user.cart.empty"}
+              {getLocaleString("users.user.cart.empty")}
             </span>
           ) : (
             <div className="overflow-x-auto max-h-96 overflow-y max-w-[1500px]">
@@ -58,22 +60,24 @@ const CartSection = () => {
                 <thead className="bg-gray-200">
                   <tr>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      {"users.user.cart.product.actions"}
+                      {getLocaleString("users.user.cart.product.actions")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      {"users.user.cart.product.name"}
+                      {getLocaleString("users.user.cart.product.name")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      {"users.user.cart.product.description"}
+                      {getLocaleString("users.user.cart.product.description")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      {"users.user.cart.product.price (ETH)"}
+                      {`${getLocaleString(
+                        "users.user.cart.product.price"
+                      )} (ETH)`}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      {"users.user.cart.product.qty"}
+                      {getLocaleString("users.user.cart.product.qty.header")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      {"users.user.cart.product.subTotal"}
+                      {getLocaleString("users.user.cart.product.subTotal")}
                     </th>
                   </tr>
                 </thead>
@@ -105,7 +109,9 @@ const CartSection = () => {
                           }}
                         >
                           <Image
-                            alt={"users.user.cart.product.qty.decrease.btn.lbl"}
+                            alt={getLocaleString(
+                              "users.user.cart.product.qty.btn.decrease.label"
+                            )}
                             src={"/Minus.svg"}
                             width={16}
                             height={16}
@@ -135,7 +141,9 @@ const CartSection = () => {
                           <Image
                             src={"/Plus.svg"}
                             className="brightness-0"
-                            alt={"users.user.cart.product.qty.increase.btn.lbl"}
+                            alt={getLocaleString(
+                              "users.user.cart.product.qty.btn.increase.label"
+                            )}
                             width={16}
                             height={16}
                           />

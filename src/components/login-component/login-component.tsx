@@ -2,6 +2,7 @@ import { useContractContext } from "@/contexts/contract-context";
 import { useWallet } from "@/contexts/wallet-context";
 import { useEffect } from "react";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
+import { useLocale } from "@/contexts/locale-context";
 import {
   concat,
   keccak256,
@@ -11,6 +12,7 @@ import {
 } from "ethers";
 
 const LoginComponent = () => {
+  const { getLocaleString } = useLocale();
   const {
     connectMetaMask,
     address,
@@ -67,12 +69,14 @@ const LoginComponent = () => {
   return (
     <div>
       {!address ? (
-        <button
-          onClick={connectMetaMask}
-        >{`users.user.connect.metamask`}</button>
+        <button onClick={connectMetaMask}>
+          {getLocaleString(`users.user.connect.metamask`)}
+        </button>
       ) : (
         <div>
-          <p>{`users.user.connect.connected : ${address}`}</p>
+          <p>{`${getLocaleString(
+            "users.user.connect.connected"
+          )} : ${address}`}</p>
           <button onClick={handleLogin}></button>
         </div>
       )}

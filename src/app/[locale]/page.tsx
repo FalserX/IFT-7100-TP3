@@ -5,12 +5,15 @@ import { useContractContext } from "@/contexts/contract-context";
 import { useLocale } from "@/contexts/locale-context";
 import { useWallet } from "@/contexts/wallet-context";
 import { ProductType } from "@/types/product";
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 export default function Home({ children }: { children: React.ReactNode }) {
   const { getLocaleString } = useLocale();
-  const { contract, loading: contractLoading } = useContractContext();
+  const {
+    contract,
+    loading: contractLoading,
+    getAllProducts,
+  } = useContractContext();
   const { loading: walletLoading, provider } = useWallet();
   const [products, setProducts] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -18,19 +21,8 @@ export default function Home({ children }: { children: React.ReactNode }) {
     const fetchProducts = async () => {
       try {
         if (contract && provider && !walletLoading && !contractLoading) {
-          const allProducts = await contract.getAllProducts();
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const formattedAllProducts = allProducts.map((product: any) => {
-            return {
-              id: product.id.toString(),
-              seller: product.seller,
-              name: product.name,
-              description: product.description,
-              price: ethers.formatEther(product.price.toString()),
-              stock: product.quantityAvailable,
-            };
-          });
-          setProducts(formattedAllProducts);
+          const allProducts = await getAllProducts();
+          setProducts(allProducts);
         } else {
           setProducts([]);
         }
@@ -45,12 +37,12 @@ export default function Home({ children }: { children: React.ReactNode }) {
       }
     };
     fetchProducts();
-  }, [contract, contractLoading, walletLoading, provider]);
+  }, [getAllProducts, contractLoading, walletLoading, provider, contract]);
 
   return (
     <main className="min-h-[85vh] bg-white rounded-2xl">
-      <h2 className="items-center text-black">
-        {getLocaleString("home.title-header")}
+      <h2 className="items-center text-gray-700 text-2xl font-bold justify-center ">
+        {getLocaleString("home.title")}
       </h2>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 text-black">
         {isLoading ? (

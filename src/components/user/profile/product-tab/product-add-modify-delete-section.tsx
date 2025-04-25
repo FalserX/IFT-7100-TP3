@@ -3,12 +3,13 @@ import { useToast } from "@/contexts/toast-notification-context";
 import { NotifType } from "@/types/notification";
 import { ethers } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
-
+import { useLocale } from "@/contexts/locale-context";
 const ProductAddModifyDeleteSection = ({
   productId,
 }: {
   productId: string | null;
 }) => {
+  const { getLocaleString } = useLocale();
   const [productName, setProductName] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
   const [productPrice, setProductPrice] = useState<number>(0.0);
@@ -106,7 +107,24 @@ const ProductAddModifyDeleteSection = ({
         );
       }
       if (tx) {
-        await tx.wait();
+        const receipt = await tx.wait();
+        const event = receipt.logs
+          .map((log: { topics: ReadonlyArray<string>; data: string }) => {
+            try {
+              return contract.interface.parseLog(log);
+            } catch {
+              return null;
+            }
+          })
+          .find(
+            (parsed: { name: string }) =>
+              parsed && parsed.name === "ProductAdded"
+          );
+        if (event) {
+          const newProductId = event.args.productId;
+          const newProduct = await contract.getProduct(newProductId);
+          console.log("New product added: ", newProduct);
+        }
       } else {
         throw new Error("Transaction failed to initialize.");
       }
@@ -121,14 +139,18 @@ const ProductAddModifyDeleteSection = ({
         NotifType.ERROR,
         3000
       );
-      throw new Error(`errors.users.user.profile.product.data.save. ${error}`);
+      throw new Error(
+        `${getLocaleString(
+          "errors.users.user.profile.product.data.save"
+        )} ${error}`
+      );
     }
   };
 
   return (
     <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
       <h3 className="mt-2 ml-2 font-bold text-gray-600">
-        {"users.user.profile.product.add.title"}
+        {getLocaleString("users.user.profile.product.add.title")}
       </h3>
       <div className="flex flex-row m-2">
         <table
@@ -139,7 +161,7 @@ const ProductAddModifyDeleteSection = ({
             <tr>
               <td>
                 <label htmlFor="productName">
-                  {"users.user.profile.product.add.name"}
+                  {getLocaleString("users.user.profile.product.add.name")}
                 </label>
               </td>
               <td className="px-4 py-2">
@@ -157,7 +179,9 @@ const ProductAddModifyDeleteSection = ({
             <tr>
               <td>
                 <label htmlFor="productDescription">
-                  {"users.user.profile.product.add.description"}
+                  {getLocaleString(
+                    "users.user.profile.product.add.description"
+                  )}
                 </label>
               </td>
               <td className="px-4 py-2">
@@ -174,7 +198,7 @@ const ProductAddModifyDeleteSection = ({
             <tr>
               <td>
                 <label htmlFor="productPrice">
-                  {"users.user.profile.product.add.price"}
+                  {getLocaleString("users.user.profile.product.add.price")}
                 </label>
               </td>
               <td className="px-4 py-2">
@@ -194,7 +218,7 @@ const ProductAddModifyDeleteSection = ({
             <tr>
               <td>
                 <label htmlFor="productStock">
-                  {"users.user.profile.product.add.stock"}
+                  {getLocaleString("users.user.profile.product.add.stock")}
                 </label>
               </td>
               <td className="px-4 py-2">
@@ -218,7 +242,9 @@ const ProductAddModifyDeleteSection = ({
                   onClick={handleCancel}
                   className="border rounded-2xl border-gray-600 p-2 text-black shadow-2xl cursor-pointer hover:bg-gray-600 hover:text-white"
                 >
-                  {"users.user.profile.product.cancel.btn.label"}
+                  {getLocaleString(
+                    "users.user.profile.product.add.btn.cancel.label"
+                  )}
                 </button>
               </td>
               <td className="px-4 py-2">
@@ -226,7 +252,7 @@ const ProductAddModifyDeleteSection = ({
                   onClick={handleSave}
                   className="border rounded-2xl p-2 bg-blue-500 border-white text-white cursor-pointer shadow-2xl hover:bg-blue-700 hover:text-white"
                 >
-                  {"users.user.profile.product.save.btn.label"}
+                  {getLocaleString("users.user.profile.product.btn.save.label")}
                 </button>
               </td>
             </tr>

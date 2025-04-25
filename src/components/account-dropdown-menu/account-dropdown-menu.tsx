@@ -85,10 +85,10 @@ const AccountDropdownMenu = ({ children }: { children: React.ReactNode }) => {
   return (
     <div ref={menuRef}>
       <AccountDropdownMenuButton
-        labelImg={`account-dropdown.btn-label`}
-        altImg={`account-dropdown.btn-alt`}
+        labelImg={`account.dropdown.btn.img.label`}
+        altImg={`account.dropdown.btn.img.alt`}
         srcImg="\User.svg"
-        tooltip={`account-dropdown.btn-tooltip`}
+        tooltip={`account.dropdown.btn.img.tooltip`}
         onClick={() => {
           setDropdownOpen(!dropdownOpen);
         }}

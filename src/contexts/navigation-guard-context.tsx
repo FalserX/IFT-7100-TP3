@@ -105,7 +105,7 @@ export const useNavigationGuard = () => {
   const ctx = useContext(NavigationGuardContext);
   if (!ctx)
     throw new Error(
-      "useNavigationGuard doit être utilisé dans NavigationGuardProvider"
+      "useNavigationGuard must be used in NavigationGuardProvider"
     );
   return ctx;
 };

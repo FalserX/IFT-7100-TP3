@@ -30,10 +30,17 @@ contract Marketplace {
     Transaction[] public transactions;
 
     mapping(uint => Product) public products;
+    mapping(address => uint[]) public transactionsByBuyer;
     mapping(address => uint[]) private productsByOwner;
     mapping(address => Seller) public sellers;
 
-    event ProductAdded(uint productId, string name, uint price, uint stock);
+    event ProductAdded(
+        uint productId,
+        string name,
+        string description,
+        uint price,
+        uint stock
+    );
     event ProductPurchased(uint productId, address buyer, uint stock);
     event SellerRated(address seller, uint rating, address buyer);
     event ProductRemoved(uint productId);
@@ -43,6 +50,10 @@ contract Marketplace {
             products[productId].seller == msg.sender,
             "Not the product seller."
         );
+        _;
+    }
+    modifier productsExists(uint _productId) {
+        require(products[_productId].exists, "Product doesn't exist");
         _;
     }
 
@@ -71,7 +82,7 @@ contract Marketplace {
         );
         productsByOwner[msg.sender].push(productCounter);
 
-        emit ProductAdded(productCounter, _name, _price, _stock);
+        emit ProductAdded(productCounter, _name, _description, _price, _stock);
     }
 
     function updateProduct(
@@ -81,7 +92,7 @@ contract Marketplace {
         uint _newPrice,
         uint _newStock,
         bool _exists
-    ) external onlySeller(_productId) {
+    ) external onlySeller(_productId) productsExists(_productId) {
         require(_newPrice > 0 && _newStock > 0, "Invalid product details.");
         Product storage product = products[_productId];
         product.price = _newPrice;
@@ -91,25 +102,42 @@ contract Marketplace {
         product.exists = _exists;
     }
 
-    function purchaseProduct(uint _productId, uint _quantity) external payable {
-        Product storage product = products[_productId];
-        require(product.exists, "Product does not exist.");
-        require(product.stock >= _quantity, "Not enough quantity available.");
-        uint totalPrice = product.price * _quantity;
-        require(msg.value >= totalPrice, "Insufficient payment.");
-
-        product.stock -= _quantity;
-        transactions.push(
-            Transaction(msg.sender, _productId, _quantity, block.timestamp)
+    function purchaseProduct(
+        uint256 _productId,
+        uint8 _quantity
+    ) public payable productsExists(_productId) {
+        require(
+            _quantity > 0 &&
+                products[_productId].stock > 0 &&
+                products[_productId].stock >= _quantity
         );
 
-        product.seller.transfer(totalPrice);
+        // Calculate total price for the requested quantity of products
+        uint256 totalPrice = products[_productId].price * _quantity;
 
-        // Remboursement si trop payé
-        if (msg.value > totalPrice) {
-            payable(msg.sender).transfer(msg.value - totalPrice);
-        }
+        // Ensure buyer's payment is sufficient to cover purchase and potential refund
+        require(
+            msg.value > totalPrice,
+            "Insufficient or excess funds provided"
+        );
 
+        // Update stock only after successful transfer to seller
+        products[_productId].stock -= _quantity;
+
+        // Transfer product price from buyer to seller using external call
+        (bool sent, ) = (products[_productId].seller).call{value: totalPrice}(
+            ""
+        );
+        require(sent, "Failed to sent ETH to seller");
+
+        Transaction memory newTx = Transaction({
+            buyer: msg.sender,
+            productId: _productId,
+            quantity: _quantity,
+            timestamp: block.timestamp
+        });
+        transactions.push(newTx);
+        transactionsByBuyer[msg.sender].push(transactions.length - 1);
         emit ProductPurchased(_productId, msg.sender, _quantity);
     }
 
@@ -135,11 +163,11 @@ contract Marketplace {
         return seller.totalRating / seller.ratingCount;
     }
 
-    function removeProduct(uint _productId) external onlySeller(_productId) {
+    function removeProduct(
+        uint _productId
+    ) external onlySeller(_productId) productsExists(_productId) {
         // Accède au produit directement via la mapping
         Product storage product = products[_productId];
-
-        require(product.exists, "Product does not exist.");
 
         // Marque le produit comme inexistant
         product.exists = false;
@@ -172,6 +200,7 @@ contract Marketplace {
             uint stock
         )
     {
+        require(products[_productId].exists, "Product doesn't exist");
         Product storage product = products[_productId];
         return (
             product.id,
@@ -184,19 +213,23 @@ contract Marketplace {
     }
 
     function getAllProducts() external view returns (Product[] memory) {
-        uint count = 0;
         uint validCount = 0;
         for (uint i = 1; i <= productCounter; i++) {
             if (products[i].exists) {
                 validCount++;
             }
         }
-        require(validCount > 0, "No products available.");
+        if (validCount == 0) {
+            Product[] memory emptyArray = new Product[](0);
+            return emptyArray;
+        }
         Product[] memory result = new Product[](validCount);
+        uint idx = 0;
+
         for (uint i = 1; i <= productCounter; i++) {
             if (products[i].exists) {
-                result[count] = products[i];
-                count++;
+                result[idx] = products[i];
+                idx++;
             }
         }
 
@@ -208,12 +241,15 @@ contract Marketplace {
     ) external view returns (Product[] memory) {
         uint[] storage ids = productsByOwner[owner];
         uint validCount = 0;
-        for (uint i = 1; i <= ids.length; i++) {
-            if (products[i].exists) {
+        for (uint i = 0; i < ids.length; i++) {
+            if (products[ids[i]].exists) {
                 validCount++;
             }
         }
-        require(validCount > 0, "No products available for the owner.");
+        if (validCount == 0) {
+            Product[] memory emptyArray = new Product[](0);
+            return emptyArray;
+        }
         Product[] memory result = new Product[](validCount);
         uint count = 0;
         for (uint i = 0; i < ids.length; i++) {
@@ -227,5 +263,16 @@ contract Marketplace {
 
     function getAllTransactions() external view returns (Transaction[] memory) {
         return transactions;
+    }
+
+    function getTransactionsByBuyer(
+        address _buyer
+    ) external view returns (Transaction[] memory) {
+        uint[] storage txIndexes = transactionsByBuyer[_buyer];
+        Transaction[] memory result = new Transaction[](txIndexes.length);
+        for (uint i = 0; i < txIndexes.length; i++) {
+            result[i] = transactions[txIndexes[i]];
+        }
+        return result;
     }
 }

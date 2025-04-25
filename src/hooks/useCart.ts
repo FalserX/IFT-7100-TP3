@@ -10,8 +10,7 @@ const CART_KEY = "cart_products";
 
 export const useCartLogic = () => {
   const { showToast } = useToast();
-  const { address } = useWallet();
-  const { getBalance } = useWallet();
+  const { address, getBalance } = useWallet();
   const [cart, setCart] = useState<ProductType[]>([]);
   const [balance, setBalance] = useState<string>();
   useEffect(() => {
@@ -76,7 +75,10 @@ export const useCartLogic = () => {
           )
         );
       }
-      showToast("users.user.cart.products.product.add", NotifType.CONFIRM);
+      showToast(
+        "users.user.cart.products.product.add.success",
+        NotifType.CONFIRM
+      );
     } else {
       showToast(
         "errors.users.user.cart.products.product.connect",
@@ -86,7 +88,10 @@ export const useCartLogic = () => {
   };
   const removeFromCart = (productId: string) => {
     setCart((prev) => prev.filter((p) => p.id !== productId));
-    showToast("users.user.cart.products.product.remove", NotifType.CONFIRM);
+    showToast(
+      "users.user.cart.products.product.remove.success",
+      NotifType.CONFIRM
+    );
   };
 
   const getSubTotalFromCart = (productId: string) => {
@@ -103,17 +108,21 @@ export const useCartLogic = () => {
 
   const clearCart = () => {
     setCart([]);
-    showToast("users.user.cart.products.remove", NotifType.CONFIRM);
+    showToast("users.user.cart.products.remove.success", NotifType.CONFIRM);
   };
 
   const buyCart = async () => {
     let success = false;
+    if (cart.length === 0) {
+      showToast("users.user.cart.products.empty", NotifType.INFO);
+      return;
+    }
     try {
       const contract = await getContract();
+
       if (!window.ethereum) {
         throw new Error("Ethereum provider is not available");
       }
-
       const totalPrice = ethers.parseEther(getTotalFromCart().toFixed(18));
       if (balance && ethers.parseUnits(balance, "ether") < totalPrice) {
         showToast(
@@ -124,26 +133,28 @@ export const useCartLogic = () => {
         return;
       }
 
-      cart.forEach(async (product) => {
-        const tx = await contract.purchaseProduct(product.id, product.qty ?? 1);
+      for (const product of cart) {
+        const productId = Number(product.id);
+        const quantity = Number(product.qty ?? 1);
+        const price = Number(product.price);
+        const tx = await contract.purchaseProduct(productId, quantity, {
+          value: ethers.parseEther((quantity * price).toFixed(18)),
+        });
         await tx.wait();
         success = true;
-      });
+      }
       if (success) {
         showToast(
           "users.user.cart.products.buy.success",
           NotifType.CONFIRM,
           3000
         );
-        clearCart();
+        await getBalance();
+        setCart([]);
       }
     } catch (err) {
       success = false;
-      showToast(
-        `users.user.cart.products.buy.error ${String(err)} `,
-        NotifType.ERROR,
-        3000
-      );
+      showToast(`errors.users.user.cart.products.buy`, NotifType.ERROR, 3000);
       console.log(err);
       return;
     }
