@@ -15,6 +15,10 @@ NEXT_PUBLIC_LOCAL_MARKETPLACE_CONTRACT_ADDRESS = 0x<VALEUR CONTRAT> sans les gui
 
 N.B.2: Inscrivez aussi l'adresse de clé de votre portefeuille (WALLET_KEY) si vous déployez sur le réseau Sepolia
 
+### Déploiement Hardhat local
+
+Pour être capable d'utiliser l'environnement hardhat local, vous devez lancer le noeud local Hardhat (voir section des scripts NPM/YARN plus bas) et déployer votre contrat (ici FruitMarketplace.sol) avec la commande de déploiement locale Hardhat (dans la section des scripts NPM/YARN).
+
 ### Commandes possibles
 
 **Hardhat native**
