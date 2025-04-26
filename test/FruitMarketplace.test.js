@@ -70,7 +70,7 @@ describe("Marketplace", function () {
             contract.connect(buyer2).purchaseProduct(1, 1, {
                 value: ethers.parseEther("1.0"),
             })
-        ).to.be.revertedWith("Insufficient payment.");
+        ).to.be.revertedWith("Insufficient funds provided");
 
         const product = await contract.getProduct(1);
         expect(product.stock).to.equal(5);

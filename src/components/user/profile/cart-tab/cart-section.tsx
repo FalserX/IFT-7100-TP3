@@ -15,6 +15,7 @@ const CartSection = () => {
     buyCart,
   } = useCart();
   const { getLocaleString } = useLocale();
+
   return (
     <div className="flex flex-col border-2 rounded-2xl mt-2 border-gray-500 shadow-2xl shadow-gray-400">
       <h3 className="mt-2 ml-2 font-bold text-gray-600">

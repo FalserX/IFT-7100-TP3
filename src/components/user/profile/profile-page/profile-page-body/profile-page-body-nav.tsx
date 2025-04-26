@@ -7,7 +7,6 @@ const ProfilePageBodyNav = ({
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { getLocaleString } = useLocale();
-
   const ProfilePageBodyTabs: { id: string; label: string }[] = [
     {
       id: "general",

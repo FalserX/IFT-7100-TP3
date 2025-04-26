@@ -1,18 +1,17 @@
 "use client";
 import { useLocale } from "@/contexts/locale-context";
 import Image from "next/image";
-import Link from "next/link";
 import { useAppUI } from "@/contexts/app-ui-context";
 
 type PageLogoProps = {
-  href: string;
+  onClick: () => void;
   imgSrc: string;
   imgAlt: string;
   tooltip?: string;
   loadingFallback?: React.ReactNode;
 };
 
-const PageLogo = ({ href, tooltip, imgAlt, imgSrc }: PageLogoProps) => {
+const PageLogo = ({ onClick, tooltip, imgAlt, imgSrc }: PageLogoProps) => {
   const { getLocaleString } = useLocale();
   const { siteName, LoadingSpinner, popupActive } = useAppUI();
 
@@ -37,9 +36,9 @@ const PageLogo = ({ href, tooltip, imgAlt, imgSrc }: PageLogoProps) => {
       <span className="ml-5">{siteName}</span>
     </>
   ) : (
-    <Link
-      href={href}
-      className={`inline-flex ${
+    <div
+      onClick={onClick}
+      className={`inline-flex hover:cursor-pointer ${
         tooltip ? "relative group" : ""
       } justify-start items-center font-bold hover:underline `}
     >
@@ -60,7 +59,7 @@ const PageLogo = ({ href, tooltip, imgAlt, imgSrc }: PageLogoProps) => {
         LoadingSpinner && <LoadingSpinner size={16} />
       )}
       <span className="ml-5">{siteName}</span>
-    </Link>
+    </div>
   );
 };
 

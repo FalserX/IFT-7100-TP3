@@ -8,16 +8,29 @@ import { useWallet } from "@/contexts/wallet-context";
 import { useCart } from "@/contexts/cart-context";
 import LanguageSwitcher from "../language-switcher/language-switcher";
 import CartButton from "../cart-button/cart-button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 const PageHeader = () => {
   const { currentLocale, getLocaleString } = useLocale();
   const { connectMetaMask, address, logout } = useWallet();
   const { cart } = useCart();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const handleClick = (newPath?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("tab");
+    router.replace(`${newPath ? newPath : pathname}?${params.toString()}`, {
+      scroll: false,
+    });
+  };
   return (
     <header className="w-full p-5">
       <div className="flex justify-between items-center w-full">
         <PageLogo
-          href={`/${currentLocale}`}
+          onClick={() => {
+            handleClick(`/${currentLocale}`);
+          }}
           imgAlt={`client.layout.btn.logo.alt`}
           imgSrc={`/Logo.svg`}
           tooltip={`client.layout.btn.logo.tooltip`}
@@ -45,7 +58,9 @@ const PageHeader = () => {
                   buttonIconSrc="/User.svg"
                   label={"users.user.account.dropdown.account.btn.label"}
                   tooltip={"users.user.account.dropdown.account.btn.tooltip"}
-                  href={`${window.location.origin}/${currentLocale}/users/${address}`}
+                  onClick={() => {
+                    handleClick(`/${currentLocale}/users/${address}`);
+                  }}
                 />
                 <AccountDropdownItemButton
                   buttonIconAlt={"users.user.account.dropdown.logout.btn.alt"}

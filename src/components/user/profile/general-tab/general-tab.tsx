@@ -1,16 +1,20 @@
 "use client";
 import { useWallet } from "@/contexts/wallet-context";
 import { useLocale } from "@/contexts/locale-context";
+import { useContractContext } from "@/contexts/contract-context";
 import ProfileTabHeader from "../profile-tab-header";
 
 import { useState, useEffect } from "react";
 import { Network } from "ethers";
+import InteractiveStarRating from "@/components/interactive-star-rating/interactive-star-rating";
 
 const GeneralTab = () => {
   const { getLocaleString } = useLocale();
   const { address, getBalance, getNetwork } = useWallet();
+  const { getAverageRating } = useContractContext();
   const [balance, setBalance] = useState<number>(0);
   const [network, setNetwork] = useState<Network | string>("");
+  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -26,6 +30,18 @@ const GeneralTab = () => {
     };
     fetchNetwork();
   }, [getNetwork]);
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      if (address) {
+        const fetchedAverageRating = await getAverageRating(address);
+        setAverageRating(fetchedAverageRating);
+      } else {
+        setAverageRating(2.5);
+      }
+    };
+    fetchAverageRating();
+  }, [address, getAverageRating]);
   return (
     <div>
       <ProfileTabHeader
@@ -120,6 +136,20 @@ const GeneralTab = () => {
                     }
                     onChange={() => {}}
                     className={`rounded-xl border pl-2 border-gray-500 bg-gray-300 w-[500px]`}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label htmlFor="averageRating">
+                    {getLocaleString("users.user.profile.general.rating.label")}
+                  </label>
+                </td>
+                <td className="px-4 py-2">
+                  <InteractiveStarRating
+                    key={averageRating ?? "init"}
+                    value={averageRating === null ? 2.5 : averageRating}
+                    disabled={true}
                   />
                 </td>
               </tr>
