@@ -4,6 +4,10 @@ Ce projet permet de démontrer l'usage des applications décentralisées avec Et
 
 Voici certaines commandes possibles
 
+### FIX
+
+Veuillez prendre la branche fix pour effectuer la correction. Merci.
+
 ### Création du fichier d'environnement
 
 Copier le fichier .env.example dans le même répertoire.
