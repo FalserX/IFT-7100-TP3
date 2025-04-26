@@ -1,0 +1,330 @@
+{
+  "account": {
+    "dropdown": {
+      "btn": {
+        "img": {
+          "label": "Votre compte",
+          "alt": "L'icône de l'usager",
+          "tooltip": "Vous pouvez accéder à tous les éléments à propos de votre compte"
+        }
+      }
+    }
+  },
+  "cart": {
+    "btn": {
+      "add": {
+        "label": "Ajouter au panier"
+      }
+    }
+  },
+  "client": {
+    "layout": {
+      "btn": {
+        "logo": {
+          "alt": "Le logo de Fruits inc.",
+          "tooltip": "Cliquer ici pour revenir à l'accueil"
+        }
+      }
+    }
+  },
+  "errors": {
+    "badRequest": {
+      "title": "Mauvaise requête",
+      "description": "Désolé, mais vous avez soumis une ou plusieurs mauvaises informations lors de votre plus récente requête",
+      "btn": {
+        "back": {
+          "label": "Revenir en arrière"
+        }
+      }
+    },
+    "error": {
+      "page": {
+        "btn": {
+          "previous": {
+            "label": "Revenir en arrière"
+          }
+        },
+        "title": "Oups! Une erreur est survenue"
+      }
+    },
+    "maintenance": {
+      "title": "En maintenance",
+      "description": "Désolé, mais actuellement le site est temporairement indisponible, mais nous revenons sous peu."
+    },
+    "notFound": {
+      "title": "Non trouvé",
+      "description": "Désolé, mais la page que vous avez demandé n'est pas trouvable actuellement.",
+      "btn": {
+        "back": {
+          "label": "Revenir en arrière"
+        },
+        "home": {
+          "label": "Revenir à l'acceuil"
+        }
+      }
+    },
+    "serverError": {
+      "title": "Erreur du serveur",
+      "description": "Désolé, mais une erreur est survenue de notre côté.Nous faisons de notre mieux pour revenir en ligne bientôt.",
+      "btn": {
+        "back": {
+          "label": "Revenir en arrière"
+        }
+      }
+    },
+    "unauthorized": {
+      "title": "Non autorisé",
+      "description": "Désolé, mais vous avez atteint une page auquel vous n'êtes pas autorisé à accéder. S.V.P REVENEZ SOUS VOS PAS ou faites faces aux conséquences.",
+      "btn": {
+        "back": {
+          "label": "Revenir en arrière"
+        }
+      }
+    },
+    "users": {
+      "user": {
+        "cart": {
+          "products": {
+            "balance": {
+              "insufficient": "Votre compte ne dispose pas assez de fonds"
+            },
+            "buy": "Une erreur est survenue lors de la transaction d'achat",
+            "product": {
+              "connect": "Une erreur est survenue lors de l'acquisition et la connexion aux données"
+            }
+          }
+        },
+        "products": {
+          "product": {
+            "contract": {
+              "error": "Le contrat d'application ne semble pas existé"
+            },
+            "delete": {
+              "error": "Le produit ne peut être retiré"
+            }
+          }
+        },
+        "profile": {
+          "product": {
+            "add": "Une erreur est survenue lors de l'ajout du produit",
+            "data": {
+              "save": "Une erreur est survenue lors de l'enregistrement du produit"
+            }
+          },
+          "products": {
+            "found": "Aucun produit n'a été trouvé"
+          },
+          "order": {
+            "rate": {
+              "seller": {
+                "sending": "Une erreur est survenue lors de l'envoi de l'évaluation du vendeur",
+                "valid": "Mauvaise évaluation,s.v.p faites l'évaluation en évaluant entre 1 et 5"
+              }
+            }
+          },
+          "tab": "Cet onglet est présentement non implémenté. S.V.P revenez vérifier plus tard"
+        }
+      }
+    }
+  },
+  "footer": {
+    "framework": {
+      "logo": {
+        "btn": {
+          "alt": "Le logo NextJS",
+          "message": "Créé avec ",
+          "tooltip": "Cliquer ici pour accéder au site web de NextJS"
+        }
+      }
+    }
+  },
+  "header": {
+    "language": {
+      "btn": {
+        "logo": {
+          "alt": "L'icône de changement de langue"
+        },
+        "tooltip": "Change to English"
+      }
+    }
+  },
+  "home": {
+    "title": "Les fruits que vous pouvez acquérir"
+  },
+  "popup": {
+    "cancel": "Annuler",
+    "confirm": "OK"
+  },
+  "products": {
+    "product": {
+      "description": "Description",
+      "price": "Prix",
+      "stock": "Stock",
+      "seller": "Vendeur"
+    }
+  },
+  "users": {
+    "user": {
+      "account": {
+        "dropdown": {
+          "account": {
+            "btn": {
+              "label": "Votre compte",
+              "tooltip": "Vous pouvez accéder à tous les éléments à propos de votre compte"
+            }
+          },
+          "login": {
+            "btn": {
+              "alt": "L'icône de connexion",
+              "label": "Connexion",
+              "tooltip": "Cliquer ici pour vous connecter"
+            }
+          },
+          "logout": {
+            "btn": {
+              "alt": "L'icône de déconnexion",
+              "label": "Déconnexion",
+              "tooltip": "Cliquer ici pour vous déconnecter"
+            }
+          }
+        }
+      },
+      "cart": {
+        "btn": {
+          "label": "Accès à votre panier d'achats"
+        },
+        "buy": "Acheter",
+        "clear": "Vider",
+        "empty": "Panier vide",
+        "products": {
+          "buy": {
+            "success": "L'achat des produits est un succès"
+          },
+          "empty": "Panier vide",
+          "product": {
+            "add": {
+              "success": "Le produit est ajouté avec succès"
+            },
+            "remove": {
+              "success": "Le produit est retiré avec succès"
+            }
+          },
+          "remove": {
+            "success": "Les produits sont retirés avec succès"
+          },
+          "total": "Total"
+        },
+        "product": {
+          "actions": "Actions",
+          "name": "Nom",
+          "description": "Description",
+          "price": "Prix",
+          "qty": {
+            "btn": {
+              "decrease": {
+                "label": "Diminuer"
+              },
+              "increase": {
+                "label": "Augmenter"
+              }
+            },
+            "header": "Quantité"
+          },
+          "subTotal": "Sous total"
+        },
+        "title": "Votre panier"
+      },
+      "connect": {
+        "connected": "L'adresse de l'usager connecté: ",
+        "metamask": "Connexion avec Metamask"
+      },
+      "products": {
+        "product": {
+          "add": {
+            "success": "Produit ajouté avec succès"
+          },
+          "delete": {
+            "success": "Le produit a été retiré"
+          }
+        }
+      },
+      "profile": {
+        "cart": {
+          "title": "Votre panier"
+        },
+        "general": {
+          "address": "Adresse",
+          "balance": "Fonds restants",
+          "network": {
+            "chainId": "Identification de chaîne",
+            "name": "Nom du réseau"
+          },
+          "rating": {
+            "label": "Évaluation moyenne"
+          },
+          "title": "Informations générales"
+        },
+        "product": {
+          "add": {
+            "name": "Nom",
+            "description": "Description",
+            "price": "Prix",
+            "stock": "Stock",
+            "title": "Ajouter ou modifier un produit"
+          },
+          "btn": {
+            "cancel": {
+              "label": "Annuler"
+            },
+            "save": {
+              "label": "Enregistrer"
+            }
+          },
+          "list": {
+            "actions": "Actions",
+            "description": "Description",
+            "name": "Nom",
+            "price": "Prix",
+            "stock": "Stock",
+            "title": "Votre liste de produits"
+          },
+          "title": "Votre liste de produits"
+        },
+        "order": {
+          "actions": "Actions",
+          "date": "Date",
+          "id": "Id produit",
+          "qty": "Quantité",
+          "rate": {
+            "btn": {
+              "label": "Évaluer"
+            },
+            "description": "Évaluer le vendeur ci-dessous",
+            "seller": {
+              "btn": {
+                "cancel": {
+                  "label": "Annuler"
+                },
+                "send": {
+                  "send": {
+                    "label": "Envoyer"
+                  },
+                  "sending": {
+                    "label": "En cours d'envoi..."
+                  }
+                }
+              },
+              "sent": "Envoyé"
+            },
+            "title": "Évaluer un vendeur"
+          },
+          "seller": "Vendeur",
+          "title": "Vos commandes"
+        },
+        "orders": {
+          "empty": "Commandes vides"
+        }
+      }
+    }
+  }
+}

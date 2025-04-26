@@ -1,0 +1,330 @@
+{
+  "account": {
+    "dropdown": {
+      "btn": {
+        "img": {
+          "label": "Your Account",
+          "alt": "The User Icon",
+          "tooltip": "You can have access to all things about your account"
+        }
+      }
+    }
+  },
+  "cart": {
+    "btn": {
+      "add": {
+        "label": "Add To Cart"
+      }
+    }
+  },
+  "client": {
+    "layout": {
+      "btn": {
+        "logo": {
+          "alt": "The Fruits inc. Logo",
+          "tooltip": "Click to go back to home"
+        }
+      }
+    }
+  },
+  "errors": {
+    "badRequest": {
+      "title": "Bad Request",
+      "description": "Sorry, but a reach a bad request when requesting the data.",
+      "btn": {
+        "back": {
+          "label": "Go back"
+        }
+      }
+    },
+    "error": {
+      "page": {
+        "btn": {
+          "previous": {
+            "label": "Go back"
+          }
+        },
+        "title": "Oups! An error happens"
+      }
+    },
+    "maintenance": {
+      "title": "Under Maintenance",
+      "description": "Sorry, but actually the site is down, but we're back soon."
+    },
+    "notFound": {
+      "title": "Not Found",
+      "description": "Sorry, but the page you requested is not found actually.",
+      "btn": {
+        "back": {
+          "label": "Go back"
+        },
+        "home": {
+          "label": "Go home"
+        }
+      }
+    },
+    "serverError": {
+      "title": "Server Error",
+      "description": "Sorry,an error occured on our side. We try our best to become online soon.",
+      "btn": {
+        "back": {
+          "label": "Go back"
+        }
+      }
+    },
+    "unauthorized": {
+      "title": "Unauthorized",
+      "description": "Sorry, but you have reach a page that you don't been authorized to access. Please step back! or assume your consequences.",
+      "btn": {
+        "back": {
+          "label": "Go back"
+        }
+      }
+    },
+    "users": {
+      "user": {
+        "cart": {
+          "products": {
+            "balance": {
+              "insufficient": "Your balance is insufficient"
+            },
+            "buy": "An error occured when the transaction happens",
+            "product": {
+              "connect": "An error occured when gathering and connecting to the data"
+            }
+          }
+        },
+        "products": {
+          "product": {
+            "contract": {
+              "error": "The contract doesn't seem to exist"
+            },
+            "delete": {
+              "error": "The product can't be deleted"
+            }
+          }
+        },
+        "profile": {
+          "product": {
+            "add": "Error adding the product",
+            "data": {
+              "save": "Error when saving the product data"
+            }
+          },
+          "products": {
+            "found": "No products have been found"
+          },
+          "order": {
+            "rate": {
+              "seller": {
+                "sending": "An error occured when sending the rating",
+                "valid": "invalid rating, please be between 1 and 5"
+              }
+            }
+          },
+          "tab": "This tab is currently not implemented, Please check later"
+        }
+      }
+    }
+  },
+  "footer": {
+    "framework": {
+      "logo": {
+        "btn": {
+          "alt": "The NextJS Logo",
+          "message": "Created with ",
+          "tooltip": "Click to access the NextJS website"
+        }
+      }
+    }
+  },
+  "header": {
+    "language": {
+      "btn": {
+        "logo": {
+          "alt": "The language switcher Icon"
+        },
+        "tooltip": "Changer en Français"
+      }
+    }
+  },
+  "home": {
+    "title": "The Fruits that you can purchase"
+  },
+  "popup": {
+    "cancel": "Cancel",
+    "confirm": "OK"
+  },
+  "products": {
+    "product": {
+      "description": "Description",
+      "price": "Price",
+      "stock": "Stock",
+      "seller": "Seller"
+    }
+  },
+  "users": {
+    "user": {
+      "account": {
+        "dropdown": {
+          "account": {
+            "btn": {
+              "label": "Your account",
+              "tooltip": "You can access to all things about your account"
+            }
+          },
+          "login": {
+            "btn": {
+              "alt": "The login icon",
+              "label": "Login",
+              "tooltip": "Click here to connect"
+            }
+          },
+          "logout": {
+            "btn": {
+              "alt": "The logout icon",
+              "label": "Logout",
+              "tooltip": "Click to disconnect"
+            }
+          }
+        }
+      },
+      "cart": {
+        "btn": {
+          "label": "Access your purchasing cart"
+        },
+        "buy": "Buy",
+        "clear": "Clear/Empty",
+        "empty": "Empty Cart",
+        "products": {
+          "buy": {
+            "success": "Products buy successful"
+          },
+          "empty": "Empty Cart",
+          "product": {
+            "add": {
+              "success": "Product added successful"
+            },
+            "remove": {
+              "success": "Product removed successful"
+            }
+          },
+          "remove": {
+            "success": "Products removed successful"
+          },
+          "total": "Total"
+        },
+        "product": {
+          "actions": "Actions",
+          "name": "Name",
+          "description": "Description",
+          "price": "Price",
+          "qty": {
+            "btn": {
+              "decrease": {
+                "label": "Decrease"
+              },
+              "increase": {
+                "label": "Increase"
+              }
+            },
+            "header": "Quantity"
+          },
+          "subTotal": "Sub Total"
+        },
+        "title": "Your Cart"
+      },
+      "connect": {
+        "connected": "The user address is connected: ",
+        "metamask": "Connect with Metamask"
+      },
+      "products": {
+        "product": {
+          "add": {
+            "success": "Product added successful"
+          },
+          "delete": {
+            "success": "The product have been deleted"
+          }
+        }
+      },
+      "profile": {
+        "cart": {
+          "title": "Your Cart"
+        },
+        "general": {
+          "address": "Address",
+          "balance": "Balance",
+          "network": {
+            "chainId": "Chain Id",
+            "name": "Network Name"
+          },
+          "rating": {
+            "label": "Average rating"
+          },
+          "title": "General informations"
+        },
+        "product": {
+          "add": {
+            "name": "Name",
+            "description": "Description",
+            "price": "Price",
+            "stock": "Stock",
+            "title": "Add or modify a product"
+          },
+          "btn": {
+            "cancel": {
+              "label": "Cancel"
+            },
+            "save": {
+              "label": "Save"
+            }
+          },
+          "list": {
+            "actions": "Actions",
+            "description": "Description",
+            "name": "Name",
+            "price": "Price",
+            "stock": "Stock",
+            "title": "Your Products list"
+          },
+          "title": "Your Products list"
+        },
+        "order": {
+          "actions": "Actions",
+          "date": "Date",
+          "id": "Product ID",
+          "qty": "Quantity",
+          "rate": {
+            "btn": {
+              "label": "Rate"
+            },
+            "description": "Rate the seller there",
+            "seller": {
+              "btn": {
+                "cancel": {
+                  "label": "Cancel"
+                },
+                "send": {
+                  "send": {
+                    "label": "Send"
+                  },
+                  "sending": {
+                    "label": "Sending..."
+                  }
+                }
+              },
+              "sent": "Sent"
+            },
+            "title": "Rate a Seller"
+          },
+          "seller": "Seller",
+          "title": "Your Orders"
+        },
+        "orders": {
+          "empty": "Empty Orders"
+        }
+      }
+    }
+  }
+}

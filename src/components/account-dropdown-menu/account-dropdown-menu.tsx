@@ -3,14 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "use-intl";
-
-type AccountDropdownMenuProps = React.PropsWithChildren<{
-  dropdownLabel?: string;
-}>;
+import { useLocale } from "@/contexts/locale-context";
+import { useAppUI } from "@/contexts/app-ui-context";
 
 type AccountDropdownItemButtonProps = {
   onClick?: () => void;
+  disabled?: boolean;
   href?: string;
   label: string;
   buttonIconSrc: string;
@@ -20,6 +18,7 @@ type AccountDropdownItemButtonProps = {
 
 type AccountDropdownMenuButtonProps = {
   tooltip: string;
+  disable?: boolean;
   srcImg: string;
   altImg: string;
   labelImg: string;
@@ -33,36 +32,44 @@ const AccountDropdownMenuButton = ({
   srcImg,
   altImg,
 }: AccountDropdownMenuButtonProps) => {
+  const { getLocaleString } = useLocale();
+  const { LoadingSpinner } = useAppUI();
+
   return (
     <div
       className={`flex ${
         tooltip ? "relative group" : ""
-      } flex-row border-2 rounded-xl p-2 items-center`}
+      } flex-row border-2 rounded-xl p-3 items-center hover:underline hover:font-bold`}
     >
       <Image
         src={srcImg}
-        alt={altImg}
+        alt={getLocaleString(altImg)}
         width={32}
         height={32}
         className="pr-5"
       />
-      <button onClick={onClick}>{labelImg}</button>
+      <button onClick={onClick}>
+        {labelImg
+          ? getLocaleString(labelImg)
+          : LoadingSpinner && <LoadingSpinner size={32} />}
+      </button>
       {tooltip ? (
         <span
-          className={`absolute top-full left-1/2 transform -translate-x-1/2 translate-y-4 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+          className={`absolute top-full left-0 w-full transform translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
         >
-          {tooltip}
+          {getLocaleString(tooltip)}
         </span>
       ) : (
-        <></>
+        LoadingSpinner && <LoadingSpinner size={32} />
       )}
     </div>
   );
 };
 
-const AccountDropdownMenu = ({ children }: AccountDropdownMenuProps) => {
+const AccountDropdownMenu = ({ children }: { children: React.ReactNode }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { LoadingSpinner } = useAppUI();
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -75,21 +82,20 @@ const AccountDropdownMenu = ({ children }: AccountDropdownMenuProps) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const t = useTranslations();
   return (
     <div ref={menuRef}>
       <AccountDropdownMenuButton
-        labelImg={`${t("account-dropdown.btn-label")}`}
-        altImg={`${t("account-dropdown.btn-alt")}`}
+        labelImg={`account.dropdown.btn.img.label`}
+        altImg={`account.dropdown.btn.img.alt`}
         srcImg="\User.svg"
-        tooltip={`${t("account-dropdown.btn-tooltip")}`}
+        tooltip={`account.dropdown.btn.img.tooltip`}
         onClick={() => {
           setDropdownOpen(!dropdownOpen);
         }}
       />
       {dropdownOpen && (
         <div className="absolute right-0 top-24 justify-center text-center border-2 mr-2 text-white shadow-lg min-w-96 min-h-12 rounded-xl border-black shadow-black bg-gray-700 z-50">
-          {children ? children : <div></div>}
+          {children ? children : LoadingSpinner && <LoadingSpinner size={32} />}
         </div>
       )}
     </div>
@@ -101,54 +107,104 @@ export const AccountDropdownItemButton = ({
   buttonIconSrc,
   label,
   tooltip,
+  disabled,
   onClick,
   href,
 }: AccountDropdownItemButtonProps) => {
+  const { getLocaleString } = useLocale();
+  const { LoadingSpinner } = useAppUI();
+
   return href ? (
     <div
       className={`flex ${
         tooltip ? "relative group" : ""
-      } border-2 border-white min-w-fit min-h-12 rounded-xl items-center`}
+      } border-2 border-white min-w-fit min-h-12 rounded-xl items-center ${
+        (onClick || href) && !disabled
+          ? "hover:font-bold hover:cursor-pointer hover:underline"
+          : ""
+      }`}
     >
-      <Link href={href} className="inline-flex">
-        <Image
-          src={buttonIconSrc}
-          alt={buttonIconAlt}
-          width={58}
-          height={58}
-          className="pl-5 pr-5"
-        />
-        {label}
-        {tooltip && (
-          <span
-            className={`absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-4 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-          >
-            {tooltip}
-          </span>
-        )}
-      </Link>
+      {disabled ? (
+        <>
+          <Image
+            src={buttonIconSrc}
+            alt={buttonIconAlt && getLocaleString(buttonIconAlt)}
+            width={58}
+            height={58}
+            className="pl-5 pr-5"
+          />
+          {label
+            ? label.includes("|")
+              ? getLocaleString(label.split("|")[0]) + label.split("|")[1]
+              : getLocaleString(label)
+            : LoadingSpinner && <LoadingSpinner size={32} />}
+          {tooltip ? (
+            <span
+              className={`absolute bottom-full left-0 w-fit transform translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+            >
+              {getLocaleString(tooltip)}
+            </span>
+          ) : (
+            LoadingSpinner && <LoadingSpinner size={32} />
+          )}
+        </>
+      ) : (
+        <Link href={href} className="inline-flex">
+          <Image
+            src={buttonIconSrc}
+            alt={buttonIconAlt && getLocaleString(buttonIconAlt)}
+            width={58}
+            height={58}
+            className="pl-5 pr-5"
+          />
+          {label
+            ? label.includes("|")
+              ? getLocaleString(label.split("|")[0]) + label.split("|")[1]
+              : getLocaleString(label)
+            : LoadingSpinner && <LoadingSpinner size={32} />}
+          {tooltip ? (
+            <span
+              className={`absolute bottom-full left-0 w-fit transform translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+            >
+              {getLocaleString(tooltip)}
+            </span>
+          ) : (
+            LoadingSpinner && <LoadingSpinner size={32} />
+          )}
+        </Link>
+      )}
     </div>
   ) : (
     <div
       className={`flex ${
         tooltip ? "relative group" : ""
-      } border-2 border-white min-w-fit min-h-12 rounded-xl items-center`}
+      } border-2 border-white min-w-fit min-h-12 rounded-xl items-center ${
+        (onClick || href) && !disabled
+          ? "hover:font-bold hover:cursor-pointer hover:underline"
+          : ""
+      }`}
     >
       <Image
         src={buttonIconSrc}
-        alt={buttonIconAlt}
+        alt={buttonIconAlt && getLocaleString(buttonIconAlt)}
         width={58}
         height={58}
         className="pl-5 pr-5"
       />
       <button onClick={onClick}>
-        {label}
-        {tooltip && (
+        {label
+          ? label.includes("|")
+            ? getLocaleString(label.split("|")[0]) + label.split("|")[1]
+            : getLocaleString(label)
+          : LoadingSpinner && <LoadingSpinner size={32} />}
+        {tooltip ? (
           <span
-            className={`absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-4 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+            className={`absolute bottom-full left-2 w-fit transform -translate-x-4 translate-y-2 mb-2 px-2 py-1 text-xs text-white bg-orange-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
           >
-            {tooltip}
+            {getLocaleString(tooltip)}
           </span>
+        ) : (
+          LoadingSpinner && <LoadingSpinner size={32} />
         )}
       </button>
     </div>
