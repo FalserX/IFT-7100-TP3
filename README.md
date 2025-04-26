@@ -4,6 +4,17 @@ Ce projet permet de démontrer l'usage des applications décentralisées avec Et
 
 Voici certaines commandes possibles
 
+### Création du fichier d'environnement
+
+Copier le fichier .env.example dans le même répertoire.
+Renommer ce fichier (normalement écrit comme .env.example.copy ou quelque chose qui y ressemble) en .env.local
+
+N.B: Si vous exécuter le projet avec hardhat, bien ne pas mettre les guillemets avec l'adresse du contrat avec hardhat en locale
+Exemple
+NEXT_PUBLIC_LOCAL_MARKETPLACE_CONTRACT_ADDRESS = 0x<VALEUR CONTRAT> sans les guillemets
+
+N.B.2: Inscrivez aussi l'adresse de clé de votre portefeuille (WALLET_KEY) si vous déployez sur le réseau Sepolia
+
 ### Commandes possibles
 
 **Hardhat native**
@@ -130,4 +141,16 @@ ou
 
 ```bash
 yarn hardhat
+```
+
+Effectue le lancement de l'initialisation de TailwindCSS
+
+```bash
+npm run tailwind:init
+```
+
+ou
+
+```bash
+yarn tailwind:init
 ```
