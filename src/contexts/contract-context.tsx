@@ -19,8 +19,9 @@ type ContractContextType = {
 const ContractContext = createContext<ContractContextType>({
   contract: null,
   loading: true,
-  getAllProducts: () => {
-    throw new Error(`getAllProducts is not initialized`);
+  getAllProducts: async () => {
+    const products: ProductType[] = [];
+    return Promise.resolve(products);
   },
   getAverageRating: async (sellerId: string) => {
     console.log(sellerId);
@@ -59,32 +60,42 @@ export const ContractProvider = ({
   }, [provider, signer]);
 
   const getAverageRating = async (sellerId: string): Promise<number> => {
-    if (!contract) {
-      throw new Error("Contract is not initialized");
+    try {
+      if (!contract) {
+        throw new Error("Contract is not initialized");
+      }
+      const averageRating = await contract.getAverageRating(sellerId);
+      return typeof averageRating === "bigint"
+        ? Number(averageRating)
+        : typeof averageRating === "string" && averageRating.startsWith("0x")
+        ? parseInt(averageRating, 16)
+        : Number(averageRating);
+    } catch (err) {
+      console.log("API Error: ", err);
+      return 2.5;
     }
-    const averageRating = await contract.getAverageRating(sellerId);
-    return typeof averageRating === "bigint"
-      ? Number(averageRating)
-      : typeof averageRating === "string" && averageRating.startsWith("0x")
-      ? parseInt(averageRating, 16)
-      : Number(averageRating);
   };
 
   const getAllProducts = async (): Promise<ProductType[]> => {
-    if (!contract) {
-      throw new Error("Contract is not initialized");
+    try {
+      if (!contract) {
+        throw new Error("Contract is not initialized");
+      }
+      const products = await contract.getAllProducts();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const productsResults: ProductType[] = products.map((p: any) => ({
+        id: p.id.toString(),
+        name: p.name,
+        description: p.description,
+        price: Number(ethers.formatUnits(p.price.toString())),
+        seller: p.seller,
+        stock: p.stock.toString(),
+      }));
+      return productsResults;
+    } catch (err) {
+      console.log("API Error: ", err);
+      return [];
     }
-    const products = await contract.getAllProducts();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const productsResults: ProductType[] = products.map((p: any) => ({
-      id: p.id.toString(),
-      name: p.name,
-      description: p.description,
-      price: Number(ethers.formatUnits(p.price.toString())),
-      seller: p.seller,
-      stock: p.stock.toString(),
-    }));
-    return productsResults;
   };
   const value = {
     contract,
