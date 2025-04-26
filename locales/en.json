@@ -249,10 +249,14 @@
         }
       },
       "profile": {
+
         "cart": {
           "title": "Your Cart"
         },
         "general": {
+          "rating": {
+            "label": "Rating"
+          },
           "address": "Address",
           "balance": "Balance",
           "network": {
@@ -262,6 +266,15 @@
           "title": "General informations"
         },
         "product": {
+          "title": "Your Products",
+          "btn": {
+            "cancel": {
+              "label": "Cancel"
+            },
+            "save": {
+              "label": "Add"
+            }
+          },
           "add": {
             "btn": {
               "cancel": {
@@ -271,6 +284,7 @@
                 "label": "Add"
               }
             },
+            "title": "Add a new product",
             "name": "Name",
             "description": "Description",
             "price": "Price",

@@ -253,15 +253,27 @@
           "title": "Votre panier"
         },
         "general": {
-          "address": "Adresse",
-          "balance": "Fonds restants",
-          "network": {
-            "chainId": "Identification de chaîne",
-            "name": "Nom du réseau"
+          "rating": {
+            "label": "Évaluation"
           },
-          "title": "Informations générales"
-        },
+            "address": "Adresse",
+            "balance": "Fonds restants",
+            "network": {
+              "chainId": "Identification de chaîne",
+              "name": "Nom du réseau"
+            },
+            "title": "Informations générales"
+          },
         "product": {
+          "title": "Vos produits",
+          "btn": {
+            "cancel": {
+              "label": "Annuler"
+            },
+            "save": {
+              "label": "Ajouter"
+            }
+          },
           "add": {
             "btn": {
               "cancel": {
@@ -271,6 +283,7 @@
                 "label": "Ajouter"
               }
             },
+            "title": "Ajouter un produit",
             "name": "Nom",
             "description": "Description",
             "price": "Prix",
