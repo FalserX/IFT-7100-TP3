@@ -61,6 +61,14 @@ contract Marketplace {
         emit ProductAdded(productCounter, _name, _price, _quantity);
     }
 
+    function updateProduct(uint _productId, uint _newPrice, uint _newQuantity) external onlySeller(_productId) {
+        require(_newPrice > 0 && _newQuantity > 0, "Invalid product details.");
+        Product storage product = products[_productId];
+        product.price = _newPrice;
+        product.quantityAvailable = _newQuantity;
+    }
+
+
     function purchaseProduct(uint _productId, uint _quantity) external payable {
         Product storage product = products[_productId];
         require(product.exists, "Product does not exist.");

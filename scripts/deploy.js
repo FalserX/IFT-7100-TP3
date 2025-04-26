@@ -1,11 +1,15 @@
-async function main() {  
-    const MySepolia = await ethers.getContractFactory("MySepolia");     
-    const MySepoliaContract = await MySepolia.deploy();
-    console.log("Contract deployed to address:",      MySepoliaContract.address);
-  }
-  main().then(() => 
-    process.exit(0)
-  ).catch((error) => {        
-     console.log(error);    
-     process.exit(1);  
-  });
+const hre = require("hardhat");
+
+async function main() {
+    const Marketplace = await hre.ethers.getContractFactory("Marketplace");
+    const marketplace = await Marketplace.deploy();
+
+    await marketplace.waitForDeployment();
+
+    console.log("Marketplace deployed to:", await marketplace.getAddress());
+}
+
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});

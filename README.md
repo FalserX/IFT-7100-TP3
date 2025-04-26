@@ -7,6 +7,11 @@ Voici certaines commandes possibles
 
 __Hardhat native__
 ```bash
+npm install --save-dev hardhat chai ethers
+npx hardhat node
+npx hardhat run scripts/deploy.js --network localhost
+npx hardhat
+npx hardhat compile
 npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
