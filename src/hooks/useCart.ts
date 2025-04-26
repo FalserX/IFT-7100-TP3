@@ -121,28 +121,26 @@ export const useCartLogic = () => {
       const contract = await getContract();
 
       if (!window.ethereum) {
-        throw new Error("Ethereum provider is not available");
+        console.log("Ethereum provider is not available");
       }
-      const totalPrice = ethers.parseEther(getTotalFromCart().toFixed(18));
+      const totalPrice = ethers.parseEther(getTotalFromCart().toString());
       if (balance && ethers.parseUnits(balance, "ether") < totalPrice) {
         showToast(
-          "users.user.cart.products.balance.insufficient",
+          "errors.users.user.cart.products.balance.insufficient",
           NotifType.ERROR,
           5000
         );
         return;
       }
 
-      for (const product of cart) {
-        const productId = Number(product.id);
-        const quantity = Number(product.qty ?? 1);
-        const price = Number(product.price);
-        const tx = await contract.purchaseProduct(productId, quantity, {
-          value: ethers.parseEther((quantity * price).toFixed(18)),
-        });
-        await tx.wait();
-        success = true;
-      }
+      const tx = await contract.purchaseMultipleProducts(
+        cart.map((p) => parseInt(p.id)),
+        cart.map((p) => Number(p.qty ?? 1)),
+        { value: totalPrice }
+      );
+
+      await tx.wait();
+      success = true;
       if (success) {
         showToast(
           "users.user.cart.products.buy.success",
@@ -155,7 +153,11 @@ export const useCartLogic = () => {
     } catch (err) {
       success = false;
       showToast(`errors.users.user.cart.products.buy`, NotifType.ERROR, 3000);
-      console.log(err);
+      console.log(
+        "Transact Error : ",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (err as any)?.reason || (err as any)?.data?.message || err
+      );
       return;
     }
   };

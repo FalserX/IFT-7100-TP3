@@ -85,6 +85,9 @@
       "user": {
         "cart": {
           "products": {
+            "balance": {
+              "insufficient": "Your balance is insufficient"
+            },
             "buy": "An error occured when the transaction happens",
             "product": {
               "connect": "An error occured when gathering and connecting to the data"
@@ -194,9 +197,6 @@
         "clear": "Clear/Empty",
         "empty": "Empty Cart",
         "products": {
-          "balance": {
-            "insufficient": "Your balance is insufficient"
-          },
           "buy": {
             "success": "Products buy successful"
           },
@@ -211,7 +211,8 @@
           },
           "remove": {
             "success": "Products removed successful"
-          }
+          },
+          "total": "Total"
         },
         "product": {
           "actions": "Actions",
@@ -309,6 +310,9 @@
           },
           "seller": "Seller",
           "title": "Your Orders"
+        },
+        "orders": {
+          "empty": "Empty Orders"
         }
       }
     }

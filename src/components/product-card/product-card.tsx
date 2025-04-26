@@ -9,7 +9,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
   const { getLocaleString } = useLocale();
   return (
     <div className="rounded-xl p-4 border shadow flex flex-col">
-      <h4 className="text-xl flex flex-col">{product.name}</h4>
+      <h4 className="text-xl flex flex-col font-bold">{product.name}</h4>
       <div className="flex flex-col gap-2">
         <span className="flex flex-row gap-2">
           <p>{getLocaleString(`products.product.description`)}</p>

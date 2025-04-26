@@ -106,33 +106,13 @@ const ProductAddModifyDeleteSection = ({
           productStock
         );
       }
-      if (tx) {
-        const receipt = await tx.wait();
-        const event = receipt.logs
-          .map((log: { topics: ReadonlyArray<string>; data: string }) => {
-            try {
-              return contract.interface.parseLog(log);
-            } catch {
-              return null;
-            }
-          })
-          .find(
-            (parsed: { name: string }) =>
-              parsed && parsed.name === "ProductAdded"
-          );
-        if (event) {
-          const newProductId = event.args.productId;
-          const newProduct = await contract.getProduct(newProductId);
-          console.log("New product added: ", newProduct);
-        }
-      } else {
-        throw new Error("Transaction failed to initialize.");
-      }
+      await tx.wait();
       showToast(
         "users.user.products.product.add.success",
         NotifType.CONFIRM,
         3000
       );
+      window.location.reload();
     } catch (error) {
       showToast(
         "errors.users.user.products.product.add",
@@ -198,7 +178,9 @@ const ProductAddModifyDeleteSection = ({
             <tr>
               <td>
                 <label htmlFor="productPrice">
-                  {getLocaleString("users.user.profile.product.add.price")}
+                  {`${getLocaleString(
+                    "users.user.profile.product.add.price"
+                  )} ETH `}
                 </label>
               </td>
               <td className="px-4 py-2">

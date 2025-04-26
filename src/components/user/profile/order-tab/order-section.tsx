@@ -5,7 +5,7 @@ import { useToast } from "@/contexts/toast-notification-context";
 import { useWallet } from "@/contexts/wallet-context";
 import { useLocale } from "@/contexts/locale-context";
 import { NotifType } from "@/types/notification";
-import { Overrides } from "ethers";
+import { ethers, Overrides } from "ethers";
 import React, { useEffect, useState } from "react";
 const OrderSection = () => {
   const { getLocaleString } = useLocale();
@@ -22,30 +22,32 @@ const OrderSection = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const getSeller = async (productId: any | Overrides) => {
       try {
-        if (!contract) {
-          throw new Error("Contract is null, cannot fetch product.");
+        if (contract) {
+          const product = await contract.getProduct(productId);
+          return product.seller;
         }
-        const product = await contract.getProduct(productId);
-        return product.seller;
-      } catch {
+        return "Unknown";
+      } catch (err) {
+        console.log("Fetching error when getting the seller: ", err);
         return "Unknown";
       }
     };
 
     const fetchTxByBuyer = async () => {
       try {
-        if (contract) {
+        if (contract && address) {
           const allTxs = await contract.getAllTransactions();
           console.log(allTxs);
-          const rawTxs = await contract.getTransactionsByBuyer(address);
-          const txs = [...rawTxs];
-          console.log(txs);
+          const rawTxs = await contract.getTransactionsByBuyer(
+            ethers.getAddress(address)
+          );
           const enrichedTxs = await Promise.all(
-            txs.map(
+            rawTxs.map(
               async (tx: {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 productId: any;
-                timestamp: { toNumber: () => number };
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                timestamp: any;
               }) => ({
                 ...tx,
                 seller: await getSeller(Number(tx.productId)),
@@ -55,8 +57,6 @@ const OrderSection = () => {
           );
 
           setTxBuyer(enrichedTxs);
-        } else {
-          console.log("Contract is null, cannot fetch transactions.");
         }
       } catch (err) {
         console.log("API error, cannot fetch transactions, ", err);
@@ -154,7 +154,9 @@ const OrderSection = () => {
           </table>
         </div>
       ) : (
-        <div>{"users.user.profile.orders.empty"}</div>
+        <span className="text-gray-500 text-sm italic mt-4 ml-5 mb-2">
+          {getLocaleString("users.user.profile.orders.empty")}
+        </span>
       )}
       <RateSellerModal
         open={modalOpen}

@@ -45,7 +45,9 @@ const CartSection = () => {
             {getLocaleString("users.user.cart.buy")}
           </button>
           <span className="font-semibold text-gray-700">
-            <span>{`users.user.cart.total : `}</span>
+            <span>{`${getLocaleString(
+              `users.user.cart.products.total`
+            )}: `}</span>
             {`${getTotalFromCart()} ETH`}
           </span>
         </div>
@@ -83,7 +85,7 @@ const CartSection = () => {
                 </thead>
                 <tbody>
                   {cart.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-500">
+                    <tr key={product.id} className="hover:bg-gray-400">
                       <td className="border border-gray-300 px-4 py-2 text-center rounded-2xl">
                         <button
                           onClick={() => removeFromCart(product.id)}

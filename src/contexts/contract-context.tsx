@@ -57,9 +57,8 @@ export const ContractProvider = ({
       description: p.description,
       price: Number(ethers.formatUnits(p.price.toString())),
       seller: p.seller,
-      stock: ethers.formatUnits(p.stock.toString()), //ccccc
+      stock: p.stock.toString(),
     }));
-    console.log(productsResults);
     return productsResults;
   };
   const value = {

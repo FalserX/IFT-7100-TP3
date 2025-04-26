@@ -85,6 +85,9 @@
       "user": {
         "cart": {
           "products": {
+            "balance": {
+              "insufficient": "Votre compte ne dispose pas assez de fonds"
+            },
             "buy": "Une erreur est survenue lors de la transaction d'achat",
             "product": {
               "connect": "Une erreur est survenue lors de l'acquisition et la connexion aux données"
@@ -194,9 +197,6 @@
         "clear": "Vider",
         "empty": "Panier vide",
         "products": {
-          "balance": {
-            "insufficient": "Votre compte ne dispose pas assez de fonds"
-          },
           "buy": {
             "success": "L'achat des produits est un succès"
           },
@@ -211,7 +211,8 @@
           },
           "remove": {
             "success": "Les produits sont retirés avec succès"
-          }
+          },
+          "total": "Total"
         },
         "product": {
           "actions": "Actions",
@@ -256,7 +257,7 @@
           "balance": "Fonds restants",
           "network": {
             "chainId": "Identification de chaîne",
-            "name": "Nom du r€seau"
+            "name": "Nom du réseau"
           },
           "title": "Informations générales"
         },
@@ -309,6 +310,9 @@
           },
           "seller": "Vendeur",
           "title": "Vos commandes"
+        },
+        "orders": {
+          "empty": "Commandes vides"
         }
       }
     }
