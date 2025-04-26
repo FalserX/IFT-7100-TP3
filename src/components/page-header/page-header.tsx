@@ -1,154 +1,86 @@
 "use client";
 import PageLogo from "../page-logo/page-logo";
-import PageCurrent from "../page-current/page-current";
 import AccountDropdownMenu, {
   AccountDropdownItemButton,
 } from "../account-dropdown-menu/account-dropdown-menu";
-import {
-  connect,
-  disconnect,
-  initWallet,
-  isConnected,
-} from "@/services/wallet";
-import { WalletResponse } from "@/types/wallet-response";
-import { ErrorCodes } from "@/utils/errors";
-import { BannerType } from "../banner-descriptor/banner-descriptor";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { useLocale } from "@/contexts/locale-context";
+import { useWallet } from "@/contexts/wallet-context";
+import { useCart } from "@/contexts/cart-context";
 import LanguageSwitcher from "../language-switcher/language-switcher";
+import CartButton from "../cart-button/cart-button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+const PageHeader = () => {
+  const { currentLocale, getLocaleString } = useLocale();
+  const { connectMetaMask, address, logout } = useWallet();
+  const { cart } = useCart();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-type PageHeaderProps = {
-  pageName: string;
-  siteName: string;
-  walletResponse: WalletResponse | undefined;
-  setBannerActive: Dispatch<SetStateAction<boolean>>;
-  setBannerType: Dispatch<SetStateAction<BannerType>>;
-  setError: Dispatch<SetStateAction<string>>;
-  setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>;
-};
-
-const connectAction = async (
-  setError: Dispatch<SetStateAction<string>>,
-  setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>,
-  setBannerType: Dispatch<SetStateAction<BannerType>>,
-  setBannerActive: Dispatch<SetStateAction<boolean>>
-) => {
-  try {
-    localStorage.setItem("walletDisconnect", "false");
-    setWalletResponse(await connect());
-  } catch (err) {
-    setError(ErrorCodes.CONNECT_ERROR);
-    setBannerType(BannerType.ERROR);
-    setBannerActive(true);
-    console.error(ErrorCodes.CONNECT_ERROR, err);
-  }
-};
-
-const disconnectAction = async (
-  setError: Dispatch<SetStateAction<string>>,
-  setWalletResponse: Dispatch<SetStateAction<WalletResponse | undefined>>,
-  setBannerType: Dispatch<SetStateAction<BannerType>>,
-  setBannerActive: Dispatch<SetStateAction<boolean>>
-) => {
-  try {
-    setWalletResponse(await disconnect());
-    localStorage.setItem("walletDisconnect", "true");
-  } catch (err) {
-    console.error(ErrorCodes.CONNECT_ERROR, err);
-    setError(ErrorCodes.CONNECT_ERROR);
-    setBannerType(BannerType.ERROR);
-    setBannerActive(true);
-  }
-};
-
-const PageHeader = ({
-  pageName,
-  siteName,
-  setError,
-  setWalletResponse,
-  setBannerActive,
-  setBannerType,
-  walletResponse,
-}: PageHeaderProps) => {
-  useEffect(() => {
-    const inWallet = async () => {
-      if (!localStorage.getItem("walletDisconnect")) {
-        setWalletResponse(await initWallet());
-        localStorage.setItem("walletDisconnect", "false");
-      }
-    };
-    if (!walletResponse) {
-      inWallet();
-    }
-  }, [setWalletResponse, walletResponse]);
+  const handleClick = (newPath?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("tab");
+    router.replace(`${newPath ? newPath : pathname}?${params.toString()}`, {
+      scroll: false,
+    });
+  };
   return (
-    <header className="flex flex-col grow rounded-2xl bg-gray-700">
-      <div className="flex flex-row gap-6 items-center p-2 pl-5 pr-5 pt-5">
-        <PageLogo siteName={siteName} href={`/`} />
-        <PageCurrent pageName={pageName} />
-        <LanguageSwitcher />
-        <AccountDropdownMenu dropdownLabel="Votre compte">
-          <>
-            {isConnected() ? (
+    <header className="w-full p-5">
+      <div className="flex justify-between items-center w-full">
+        <PageLogo
+          onClick={() => {
+            handleClick(`/${currentLocale}`);
+          }}
+          imgAlt={`client.layout.btn.logo.alt`}
+          imgSrc={`/Logo.svg`}
+          tooltip={`client.layout.btn.logo.tooltip`}
+        />
+        <div className="flex gap-6 items-center">
+          <LanguageSwitcher
+            imgSrc={"/Globe.svg"}
+            imgAlt={getLocaleString("header.language.btn.logo.alt")}
+            tooltip={getLocaleString("header.language.btn.tooltip")}
+          />
+          {address && (
+            <CartButton
+              imgAlt="users.user.cart.title"
+              imgSrc={`${
+                cart.length > 0 ? "FillBasket.svg" : "/EmptyBasket.svg"
+              }`}
+              tooltip={getLocaleString("users.user.cart.btn.label")}
+            />
+          )}
+          <AccountDropdownMenu>
+            {address ? (
               <>
                 <AccountDropdownItemButton
-                  buttonIconAlt="Icone Portefeuille"
-                  buttonIconSrc="/Wallet.svg"
-                  label={`Votre portefeuille ${walletResponse?.address.substring(
-                    0,
-                    15
-                  )}...`}
-                  onClick={() => {}}
+                  buttonIconAlt={"users.user.account.dropdown.account.btn.alt"}
+                  buttonIconSrc="/User.svg"
+                  label={"users.user.account.dropdown.account.btn.label"}
+                  tooltip={"users.user.account.dropdown.account.btn.tooltip"}
+                  onClick={() => {
+                    handleClick(`/${currentLocale}/users/${address}`);
+                  }}
                 />
                 <AccountDropdownItemButton
-                  buttonIconAlt="Icone Panier"
-                  buttonIconSrc="/EmptyBasket.svg"
-                  label="Votre panier"
-                  href="/basket"
-                />
-                <AccountDropdownItemButton
-                  buttonIconAlt="Icone Commandes"
-                  buttonIconSrc="/list.svg"
-                  label="Vos commandes"
-                  href="/commands"
-                />
-                <AccountDropdownItemButton
-                  buttonIconAlt="Icone Déconnexion"
+                  buttonIconAlt={"users.user.account.dropdown.logout.btn.alt"}
                   buttonIconSrc="/Exit.svg"
-                  label="Se déconnecter"
-                  onClick={async () =>
-                    disconnectAction(
-                      setError,
-                      setWalletResponse,
-                      setBannerType,
-                      setBannerActive
-                    )
-                  }
+                  label={"users.user.account.dropdown.logout.btn.label"}
+                  tooltip={"users.user.account.dropdown.logout.btn.tooltip"}
+                  onClick={logout}
                 />
               </>
             ) : (
-              <>
-                <AccountDropdownItemButton
-                  buttonIconAlt="Icone Connexion"
-                  buttonIconSrc="/Enter.svg"
-                  label="Se connecter"
-                  onClick={async () => {
-                    await connectAction(
-                      setError,
-                      setWalletResponse,
-                      setBannerType,
-                      setBannerActive
-                    );
-                  }}
-                />
-              </>
+              <AccountDropdownItemButton
+                buttonIconAlt={"users.user.account.dropdown.login.btn.alt"}
+                buttonIconSrc="/Enter.svg"
+                label={"users.user.account.dropdown.login.btn.label"}
+                tooltip={"users.user.account.dropdown.login.btn.tooltip"}
+                onClick={connectMetaMask}
+              />
             )}
-          </>
-        </AccountDropdownMenu>
-      </div>
-      <div className="flex flex-row grow p-5 items-center">
-        <button className="flex border-2 border-white min-w-fit min-h-12 rounded-xl">
-          TEST
-        </button>
+          </AccountDropdownMenu>
+        </div>
       </div>
     </header>
   );

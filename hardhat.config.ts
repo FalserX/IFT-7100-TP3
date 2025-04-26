@@ -1,40 +1,18 @@
-import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-const {API_URL, WALLET_KEY} = process.env
-require('dotenv').config()
+import * as dotenv from "dotenv";
+dotenv.config();
+import { HardhatUserConfig } from "hardhat/types";
 
 const config: HardhatUserConfig = {
-  solidity: {
-    version:"0.8.28"
-  },
+  solidity: "0.8.28",
   networks: {
-    // for mainnet
-    'base-mainnet': {
-      url: 'https://mainnet.base.org',
-      accounts: [WALLET_KEY as string],
-      gasPrice: 1000000000
+    localhost: {
+      url: "http://127.0.0.1:8545",
     },
-    // for testnet
-    'base-sepolia': {
-      url: 'https://sepolia.base.org',
-      accounts: [WALLET_KEY as string],
-      gasPrice: 1000000000
-    },
-    // From Sepolia
-    'sepolia':{
-      url: API_URL,
-      accounts: [WALLET_KEY as string],
-      gasPrice: 1000000000
-    },
-    // for local dev environment
-    'base-local': {
-      url: "http://localhost:8545",
-      accounts: [WALLET_KEY as string],
-      gasPrice: 1000000000
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL ? process.env.SEPOLIA_RPC_URL : "",
+      accounts: process.env.WALLET_KEY ? [process.env.WALLET_KEY] : [],
     },
   },
-  defaultNetwork: 'hardhat'
 };
-
-
 export default config;
