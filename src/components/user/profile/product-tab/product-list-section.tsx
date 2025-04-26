@@ -89,7 +89,9 @@ const ProductListSection = ({
                     )}
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    {`${"users.user.profile.product.list.price"} ETH`}
+                    {`${getLocaleString(
+                      "users.user.profile.product.list.price"
+                    )} (ETH)`}
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
                     {getLocaleString("users.user.profile.product.list.stock")}

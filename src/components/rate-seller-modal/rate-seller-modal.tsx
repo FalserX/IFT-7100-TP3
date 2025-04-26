@@ -38,8 +38,12 @@ const RateSellerModal = ({ open, onClose, onRate, sellerAddress }: Props) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">{`users.user.profile.order.rate.title`}</h2>
-        <p className="text-sm text-gray-600 mb-2">{`users.user.profile.order.rate.description`}</p>
+        <h2 className="text-xl font-semibold mb-4">
+          {getLocaleString(`users.user.profile.order.rate.title`)}
+        </h2>
+        <p className="text-sm text-gray-600 mb-2">
+          {getLocaleString(`users.user.profile.order.rate.description`)}
+        </p>
         <InteractiveStarRating value={rating} onRatingChange={setRating} />
         <div className="flex justify-end gap-2 mt-6">
           <button

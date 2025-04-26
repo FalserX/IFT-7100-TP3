@@ -180,7 +180,7 @@ const ProductAddModifyDeleteSection = ({
                 <label htmlFor="productPrice">
                   {`${getLocaleString(
                     "users.user.profile.product.add.price"
-                  )} ETH `}
+                  )} (ETH) `}
                 </label>
               </td>
               <td className="px-4 py-2">
@@ -225,7 +225,7 @@ const ProductAddModifyDeleteSection = ({
                   className="border rounded-2xl border-gray-600 p-2 text-black shadow-2xl cursor-pointer hover:bg-gray-600 hover:text-white"
                 >
                   {getLocaleString(
-                    "users.user.profile.product.add.btn.cancel.label"
+                    "users.user.profile.product.btn.cancel.label"
                   )}
                 </button>
               </td>

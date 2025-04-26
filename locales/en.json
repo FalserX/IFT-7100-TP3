@@ -259,22 +259,26 @@
             "chainId": "Chain Id",
             "name": "Network Name"
           },
+          "rating": {
+            "label": "Average rating"
+          },
           "title": "General informations"
         },
         "product": {
           "add": {
-            "btn": {
-              "cancel": {
-                "label": "Cancel"
-              },
-              "save": {
-                "label": "Add"
-              }
-            },
             "name": "Name",
             "description": "Description",
             "price": "Price",
-            "stock": "Stock"
+            "stock": "Stock",
+            "title": "Add or modify a product"
+          },
+          "btn": {
+            "cancel": {
+              "label": "Cancel"
+            },
+            "save": {
+              "label": "Save"
+            }
           },
           "list": {
             "actions": "Actions",
@@ -283,14 +287,19 @@
             "price": "Price",
             "stock": "Stock",
             "title": "Your Products list"
-          }
+          },
+          "title": "Your Products list"
         },
         "order": {
           "actions": "Actions",
           "date": "Date",
-          "id": "ID",
+          "id": "Product ID",
           "qty": "Quantity",
           "rate": {
+            "btn": {
+              "label": "Rate"
+            },
+            "description": "Rate the seller there",
             "seller": {
               "btn": {
                 "cancel": {
@@ -306,7 +315,8 @@
                 }
               },
               "sent": "Sent"
-            }
+            },
+            "title": "Rate a Seller"
           },
           "seller": "Seller",
           "title": "Your Orders"

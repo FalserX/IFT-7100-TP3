@@ -259,22 +259,26 @@
             "chainId": "Identification de chaîne",
             "name": "Nom du réseau"
           },
+          "rating": {
+            "label": "Évaluation moyenne"
+          },
           "title": "Informations générales"
         },
         "product": {
           "add": {
-            "btn": {
-              "cancel": {
-                "label": "Annuler"
-              },
-              "save": {
-                "label": "Ajouter"
-              }
-            },
             "name": "Nom",
             "description": "Description",
             "price": "Prix",
-            "stock": "Stock"
+            "stock": "Stock",
+            "title": "Ajouter ou modifier un produit"
+          },
+          "btn": {
+            "cancel": {
+              "label": "Annuler"
+            },
+            "save": {
+              "label": "Enregistrer"
+            }
           },
           "list": {
             "actions": "Actions",
@@ -283,14 +287,19 @@
             "price": "Prix",
             "stock": "Stock",
             "title": "Votre liste de produits"
-          }
+          },
+          "title": "Votre liste de produits"
         },
         "order": {
           "actions": "Actions",
           "date": "Date",
-          "id": "Identification",
+          "id": "Id produit",
           "qty": "Quantité",
           "rate": {
+            "btn": {
+              "label": "Évaluer"
+            },
+            "description": "Évaluer le vendeur ci-dessous",
             "seller": {
               "btn": {
                 "cancel": {
@@ -306,7 +315,8 @@
                 }
               },
               "sent": "Envoyé"
-            }
+            },
+            "title": "Évaluer un vendeur"
           },
           "seller": "Vendeur",
           "title": "Vos commandes"

@@ -151,13 +151,18 @@ const OrderSection = () => {
             </thead>
             <tbody>
               {txBuyer.map((tx) => (
-                <tr key={tx.productId} className="hover:bg-gray-500 border-t">
+                <tr
+                  key={tx.productId + "_" + tx.timestamp}
+                  className="hover:bg-gray-500 border-t"
+                >
                   <td className="px-3 py-2">
                     <button
                       onClick={() => openRatingModal(tx.seller)}
                       className="hover:underline hover:bg-blue-600 hover:cursor-pointer px-2 py-1 text-white bg-blue-500 rounded"
                     >
-                      {"users.user.profile.orders.rate"}
+                      {getLocaleString(
+                        "users.user.profile.order.rate.btn.label"
+                      )}
                     </button>
                   </td>
                   <td className="px-3 py-2">{tx.productId.toString()}</td>
