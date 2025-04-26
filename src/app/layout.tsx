@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@/app/globals.css";
 import { ReactNode } from "react";
 import { LocaleContextProvider } from "@/contexts/locale-context";
-import ClientProvider from "../client-provider";
+import ClientProvider from "@/app/client-provider";
 
 type Props = {
   children: ReactNode;

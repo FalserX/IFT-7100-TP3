@@ -139,16 +139,28 @@ export const useCartLogic = () => {
         { value: totalPrice }
       );
 
-      await tx.wait();
-      success = true;
-      if (success) {
-        showToast(
-          "users.user.cart.products.buy.success",
-          NotifType.CONFIRM,
+      const receipt = await tx.wait();
+      console.log(receipt);
+      if (receipt.status == 1) {
+        success = true;
+        if (success) {
+          showToast(
+            "users.user.cart.products.buy.success",
+            NotifType.CONFIRM,
+            3000
+          );
+          await getBalance();
+          setCart([]);
+        }
+      } else {
+        success = false;
+        showToast(`errors.users.user.cart.products.buy`, NotifType.ERROR, 3000);
+        console.log(
+          "errors.users.user.cart.products.buy",
+          NotifType.ERROR,
           3000
         );
-        await getBalance();
-        setCart([]);
+        return;
       }
     } catch (err) {
       success = false;

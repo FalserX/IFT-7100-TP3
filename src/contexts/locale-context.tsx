@@ -113,7 +113,7 @@ export const LocaleContextProvider = ({
 export const useLocale = () => {
   const context = useContext(LocaleContext);
   if (!context) {
-    throw new Error("useLocale must be within CurrentLocaleProvider");
+    throw new Error("useLocale must be within LocaleContextProvider");
   }
   return context;
 };

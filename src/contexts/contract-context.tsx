@@ -13,6 +13,7 @@ type ContractContextType = {
   contract: ethers.Contract | null;
   loading: boolean;
   getAllProducts: () => Promise<ProductType[]>;
+  getAverageRating: (sellerId: string) => Promise<number>;
 };
 
 const ContractContext = createContext<ContractContextType>({
@@ -20,6 +21,10 @@ const ContractContext = createContext<ContractContextType>({
   loading: true,
   getAllProducts: () => {
     throw new Error(`getAllProducts is not initialized`);
+  },
+  getAverageRating: async (sellerId: string) => {
+    console.log(sellerId);
+    return Promise.resolve(2.5);
   },
 });
 
@@ -34,9 +39,17 @@ export const ContractProvider = ({
   const [loading, setLoading] = useState(true);
   const { provider, signer } = useWallet();
   useEffect(() => {
-    if (provider && signer && LOCAL_MARKETPLACE_CONTRACT_ADDRESS !== "") {
+    if (
+      provider &&
+      signer &&
+      (CONTRACT_ADDRESS !== ""
+        ? CONTRACT_ADDRESS
+        : LOCAL_MARKETPLACE_CONTRACT_ADDRESS !== "")
+    ) {
       const marketplaceContract = new ethers.Contract(
-        LOCAL_MARKETPLACE_CONTRACT_ADDRESS,
+        CONTRACT_ADDRESS !== ""
+          ? CONTRACT_ADDRESS
+          : LOCAL_MARKETPLACE_CONTRACT_ADDRESS,
         MarketplaceAbi.abi,
         signer
       );
@@ -44,6 +57,18 @@ export const ContractProvider = ({
       setLoading(false);
     }
   }, [provider, signer]);
+
+  const getAverageRating = async (sellerId: string): Promise<number> => {
+    if (!contract) {
+      throw new Error("Contract is not initialized");
+    }
+    const averageRating = await contract.getAverageRating(sellerId);
+    return typeof averageRating === "bigint"
+      ? Number(averageRating)
+      : typeof averageRating === "string" && averageRating.startsWith("0x")
+      ? parseInt(averageRating, 16)
+      : Number(averageRating);
+  };
 
   const getAllProducts = async (): Promise<ProductType[]> => {
     if (!contract) {
@@ -65,6 +90,7 @@ export const ContractProvider = ({
     contract,
     loading,
     getAllProducts,
+    getAverageRating,
   };
   return (
     <ContractContext.Provider value={value}>

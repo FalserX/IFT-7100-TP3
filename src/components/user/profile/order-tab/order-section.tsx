@@ -5,6 +5,7 @@ import { useToast } from "@/contexts/toast-notification-context";
 import { useWallet } from "@/contexts/wallet-context";
 import { useLocale } from "@/contexts/locale-context";
 import { NotifType } from "@/types/notification";
+import { RawTransaction, Transaction } from "@/types/transaction";
 import { ethers, Overrides } from "ethers";
 import React, { useEffect, useState } from "react";
 const OrderSection = () => {
@@ -12,12 +13,10 @@ const OrderSection = () => {
   const { address } = useWallet();
   const { contract } = useContractContext();
   const { showToast } = useToast();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [txBuyer, setTxBuyer] = useState<any[] | null>(null);
+  const [txBuyer, setTxBuyer] = useState<Transaction[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [selectedSeller, setSelectedSeller] = useState<any>(null);
+  const [selectedSeller, setSelectedSeller] = useState<string>("");
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const getSeller = async (productId: any | Overrides) => {
@@ -36,24 +35,54 @@ const OrderSection = () => {
     const fetchTxByBuyer = async () => {
       try {
         if (contract && address) {
-          const allTxs = await contract.getAllTransactions();
-          console.log(allTxs);
-          const rawTxs = await contract.getTransactionsByBuyer(
+          const result = await contract.getTransactionsByBuyer(
             ethers.getAddress(address)
           );
-          const enrichedTxs = await Promise.all(
-            rawTxs.map(
-              async (tx: {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                productId: any;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                timestamp: any;
-              }) => ({
-                ...tx,
-                seller: await getSeller(Number(tx.productId)),
-                timestamp: new Date(Number(tx.timestamp) * 1000),
-              })
-            )
+
+          const proxyTxs = Array.isArray(result)
+            ? result
+            : Object.values(result);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const rawTxs: RawTransaction[] = (proxyTxs as any[]).map((tx) => ({
+            buyerAddress: String(tx[0]),
+            productId: tx[1].toString(),
+            quantity: tx[2].toString(),
+            timestampRaw: tx[3],
+          }));
+
+          const enrichedTxs: Transaction[] = await Promise.all(
+            rawTxs.map(async (tx) => {
+              let tsSeconds: number;
+              if (typeof tx.timestampRaw === "bigint") {
+                tsSeconds = Number(tx.timestampRaw);
+              } else if (
+                typeof tx.timestampRaw === "string" &&
+                tx.timestampRaw.startsWith("0x")
+              ) {
+                tsSeconds = parseInt(tx.timestampRaw, 16);
+              } else {
+                tsSeconds = Number(tx.timestampRaw);
+              }
+
+              if (Number.isNaN(tsSeconds)) {
+                console.log("Invalid Timestamp : ", tx.timestampRaw);
+                tsSeconds = 0;
+              }
+              const date = new Date(tsSeconds * 1000);
+              if (isNaN(date.getTime())) {
+                console.log("Invalid parsing Date", tsSeconds, date);
+              }
+              const productId = Number(tx.productId);
+              const seller = await getSeller(productId);
+
+              return {
+                buyerAddress: tx.buyerAddress,
+                productId: productId,
+                quantity: Number(tx.quantity),
+                timestamp: date,
+                seller: seller,
+              };
+            })
           );
 
           setTxBuyer(enrichedTxs);
@@ -122,7 +151,7 @@ const OrderSection = () => {
             </thead>
             <tbody>
               {txBuyer.map((tx) => (
-                <tr key={tx.id} className="hover:bg-gray-500 border-t">
+                <tr key={tx.productId} className="hover:bg-gray-500 border-t">
                   <td className="px-3 py-2">
                     <button
                       onClick={() => openRatingModal(tx.seller)}
@@ -132,18 +161,15 @@ const OrderSection = () => {
                     </button>
                   </td>
                   <td className="px-3 py-2">{tx.productId.toString()}</td>
-                  <td className="px-3 py-2">{tx.qty.toString()}</td>
+                  <td className="px-3 py-2">{tx.quantity.toString()}</td>
                   <td className="px-3 py-2">
-                    {new Date(tx.timestamp * 1000).toLocaleDateString(
-                      `locale`,
-                      {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }
-                    )}
+                    {new Date(tx.timestamp).toLocaleDateString(`locale`, {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </td>
                   <td className="px-3 py-2">
                     <span className="font-mono text-xs">{tx.seller}</span>
